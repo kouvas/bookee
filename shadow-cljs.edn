@@ -1,0 +1,20 @@
+{:deps           {:aliases [:dev]}
+ :cache-blockers #{lambdaisland.ornament}
+ :dev-http       {8090 {:root             "resources/public"
+                        :host             "0.0.0.0"
+                        :push-state/index "index.html"}
+                  8092 {:roots ["portfolio/resources/public" "classpath:public" "resources/public"]}}
+ :nrepl          {:port 9000}
+ :builds         {:app
+                  {:target      :browser
+                   :modules     {:main {:init-fn bookee.core/main}}
+                   :dev         {:output-dir "resources/public/js"}
+                   :build-hooks [(bookee.hooks/write-styles-hook)]}
+
+                  :portfolio
+                  {:target      :browser
+                   :modules     {:app-portfolio {:init-fn bookee.portfolio/main}}
+                   :dev         {:output-dir "portfolio/resources/public/js"}
+                   :output-to   "portfolio/resources/public/js/app-portfolio.js"
+                   :asset-path  "/js"
+                   :build-hooks [(bookee.hooks/write-styles-hook)]}}}

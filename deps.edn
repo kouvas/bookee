@@ -1,0 +1,23 @@
+{:paths ["src" "resources"]
+ :deps  {org.clojure/clojure       {:mvn/version "1.12.2"}
+         http-kit/http-kit         {:mvn/version "2.9.0-beta2"}
+         no.cjohansen/replicant    {:mvn/version "2025.06.21"}
+         no.cjohansen/phosphor-clj {:mvn/version "2025.04.16"}
+         metosin/reitit            {:mvn/version "0.9.1"}
+         tick/tick                 {:mvn/version "1.0"}
+         thheller/shadow-cljs      {:mvn/version "3.2.0"}
+         com.lambdaisland/ornament {:mvn/version "1.16.141"}}
+ :aliases
+ {:dev
+  {:extra-paths ["src/dev" "portfolio/src"]
+   :extra-deps  {no.cjohansen/lookup    {:mvn/version "2025.04.12"}
+                 no.cjohansen/dataspex  {:mvn/version "2025.08.1"}
+                 no.cjohansen/portfolio {:mvn/version "2025.08.29"}}}
+  :build
+  {:deps       {io.github.clojure/tools.build
+                {:mvn/version "0.10.10"}}
+   :ns-default build}
+  :test
+  {:extra-paths ["test"]
+   :extra-deps  {org.clojure/test.check               {:mvn/version "1.1.1"}
+                 io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}}}}
