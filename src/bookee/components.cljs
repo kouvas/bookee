@@ -16,21 +16,27 @@
           [:a {:on {:click [[:toggle-details id]]}}
            (css/details-link details-text)]])
        (when (and details details-visible?)
-         (css/details-body details))
-       ])))
+         (css/details-body details))])))
 
 (defn team-card
-  [{:keys [name surname img details services-offered] :as user}]
-  (css/team-card
-    [:img.team-image {:src img :alt (str name " " surname)}]
-    [:div.team-content
-     [:div.team-name (str name " " surname)]
-     [:div.team-role details]
-     (when (seq services-offered)
-       [:div.team-specialties
-        (take 3
-              (for [service-id services-offered
-                    :let [service (first (filter #(= (:id %) service-id) data/services))]]
-                [:span.specialty-badge {:key service-id}
-                 (:service-name service)]))])]
-    [:div.team-arrow ">"]))
+  [{:keys [id name surname img details services-offered] :as user} state]
+  (let [details-visible? (get-in state [:ui :details-visibility? id] false)
+        details-text     (if details-visible? "Hide details" "Details")]
+    (css/team-card
+      [:img.team-image {:src img :alt (str name " " surname)}]
+      [:div.team-content
+       [:div.team-name (str name " " surname)]
+       (when details
+         [:a {:on {:click [[:toggle-details id]]}}
+          [:div.team-role (css/details-link details-text)]])
+       (when (and details
+                  details-visible?
+                  (seq services-offered))
+         (css/details-body
+           [:div.team-role details]
+           [:div.team-specialties
+            (for [service-id services-offered
+                  :let [service (first (filter #(= (:id %) service-id) data/services))]]
+              [:span.specialty-badge {:key service-id}
+               (:service-name service)])]))]
+      [:div.team-arrow ">"])))

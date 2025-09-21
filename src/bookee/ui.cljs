@@ -27,7 +27,7 @@
          [:h2 "Team"]
          (for [team-id data/team-ids
                :let [team-member (first (filter #(= (:id %) team-id) data/users))]]
-           (comp/team-card team-member))]
+           (comp/team-card team-member state))]
         [:section#about
          [:h2 "About"]
          (repeat 5 [:br])]
