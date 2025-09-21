@@ -4,19 +4,11 @@
             [bookee.data :as data]))
 
 (def shop-name "La BarberShop")
-(def navbar
-  (css/navbar
-    [:ul
-     [:li [:a {:href "#services"} "Services"]]
-     [:li [:a {:href "#team"} "Team"]]
-     [:li [:a {:href "#about"} "About"]]
-     [:li [:a {:href "#reviews"} "Reviews"]]
-     [:li [:a {:href "#address"} "Address"]]]))
 
 (defn main
   [state]
   (css/content
-    navbar
+    comp/navbar
     (css/main
       (css/container
         [:section#services

@@ -2,6 +2,16 @@
   (:require [bookee.css :as css]
             [bookee.data :as data]))
 
+
+(def navbar
+  (css/navbar
+    [:ul
+     [:li [:a {:href "#services"} "Services"]]
+     [:li [:a {:href "#team"} "Team"]]
+     [:li [:a {:href "#about"} "About"]]
+     [:li [:a {:href "#reviews"} "Reviews"]]
+     [:li [:a {:href "#address"} "Address"]]]))
+
 (defn service-card
   [{:keys [id service-name duration price currency details] :as service} state]
   (let [details-visible? (get-in state [:ui :details-visibility? id] false)
