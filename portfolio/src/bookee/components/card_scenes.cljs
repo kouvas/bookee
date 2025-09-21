@@ -4,69 +4,81 @@
             [portfolio.replicant :refer [defscene]]
             [bookee.data :as data]))
 
-(defscene base-card
-  ;; Direct use of CSS class since base-card is just styling
-  (css/base-card
-    [:h2 "Base Content Card"]
-    [:p "This card contains content."]))
-
-(defscene service-card
-  (comp/service-card {:service-name "BuzCut"
-                      :duration     30
-                      :price        12
-                      :currency     :euro
-                      :details      "Da best cut"}
+(defscene service-card-collapsed
+  (comp/service-card {:id 1
+                      :service-name "Haircut & Style"
+                      :duration 45
+                      :price 35
+                      :currency :euro
+                      :details "Full service cut with consultation and styling"}
                      {}))
 
-(defscene team-card
+(defscene service-card-expanded
+  (comp/service-card {:id 2
+                      :service-name "Beard Trim"
+                      :duration 20
+                      :price 15
+                      :currency :usd
+                      :details "Professional beard shaping and grooming"}
+                     {:ui {:details-visibility? {2 true}}}))
+
+(defscene service-cards-mixed
+  [:div {:style {:display "flex" :flex-direction "column" :gap "1rem"}}
+   (comp/service-card {:id 3
+                       :service-name "Quick Trim"
+                       :duration 15
+                       :price 10
+                       :currency :euro}
+                      {})
+   (comp/service-card {:id 4
+                       :service-name "Color Treatment"
+                       :duration 90
+                       :price 85
+                       :currency :euro
+                       :details "Full color service with consultation"}
+                      {:ui {:details-visibility? {4 true}}})
+   (comp/service-card {:id 5
+                       :service-name "Hot Shave"
+                       :duration 30
+                       :price 25
+                       :currency :usd
+                       :details "Classic hot towel shave with premium products"}
+                      {})])
+
+(defscene team-card-collapsed
   [:div {:style {:width "400px"}}
-   (comp/team-card (first (filter #(= (:id %) 10) data/users)))])
+   (comp/team-card {:id 20
+                    :name "Alice"
+                    :surname "Smith"
+                    :img "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    :details "Senior Stylist - 10 years experience"
+                    :services-offered [1 2 3]}
+                   {})])
 
-(defscene team-cards-list
-  [:div {:style {:max-width "600px"}}
-   (for [team-id data/team-ids
-         :let [team-member (first (filter #(= (:id %) team-id) data/users))]]
-     (comp/team-card team-member))])
-
-(defscene team-card-hover
+(defscene team-card-expanded
   [:div {:style {:width "400px"}}
-   [:div {:style {:transform  "translateY(-2px)"
-                  :box-shadow "0 4px 16px rgba(0,0,0,0.15)"
-                  :transition "all 0.3s ease"}}
-    (comp/team-card (nth data/users 1))]])
+   (comp/team-card {:id 21
+                    :name "Bob"
+                    :surname "Johnson"
+                    :img "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    :details "Master Barber - Specializes in classic cuts"
+                    :services-offered [1 2 5]}
+                   {:ui {:details-visibility? {21 true}}})])
 
-(defscene team-card-minimal
+(defscene team-card-no-details
   [:div {:style {:width "400px"}}
-   (comp/team-card {:id               99
-                    :name             "John"
-                    :surname          "Doe"
-                    :img              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    :details          "New team member"
-                    :services-offered []})])
+   (comp/team-card {:id 22
+                    :name "Charlie"
+                    :surname "Brown"
+                    :img "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    :services-offered []}
+                   {})])
 
-(defscene card-inheritance-demo
-  [:div {:style {:max-width "800px"}}
-   [:h3 {:style {:margin-bottom "1rem"}} "All cards inherit from base-card:"]
-
-   [:div {:style {:margin-bottom "0.5rem"}}
-    (css/base-card
-      [:h4 "Base Card"]
-      [:p "This is a plain base-card with default styling."])]
-
-   [:div {:style {:margin-bottom "0.5rem"}}
-    (comp/service-card {:service-name "Haircut"
-                        :duration     30
-                        :price        40
-                        :currency     :usd
-                        :details      "Professional cut"}
-                       {})]
-
-   [:div {:style {:margin-bottom "0.5rem"}}
-    (comp/team-card (first data/users))]
-
-   [:p {:style {:margin-top       "1rem"
-                :padding          "1rem"
-                :background-color "#f3f4f6"
-                :border-radius    "0.5rem"}}
-    "All cards share: same background, border-radius, shadow, hover effects, transitions. "
-    "Each card type onlydds its specific styling!"]])
+(defscene team-cards-mixed-states
+  [:div {:style {:display "flex" :flex-direction "column" :gap "1rem" :max-width "600px"}}
+   (comp/team-card (assoc (first data/users) :details "Expert colorist and stylist")
+                   {})
+   (comp/team-card (assoc (nth data/users 1) :details "Beard specialist")
+                   {:ui {:details-visibility? {(-> data/users (nth 1) :id) true}}})
+   (comp/team-card (nth data/users 2)
+                   {})])
