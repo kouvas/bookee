@@ -4,7 +4,7 @@
             [replicant.dom :as r]))
 
 ;; Global application store/state
-(defonce !store (atom {:ui {}}))
+(defonce !store (atom {:ui {:active-section "services"}}))
 
 (defn render-ui
   [new-state]
@@ -28,6 +28,13 @@
           (case (first action)
             :toggle-details
             [(into [:effect/toggle-details] (rest action))]
+
+            :run-scroll-observer
+            [[:effect/run-scroll-observer]]
+
+            :set-active-nav-link
+            [(into [:effect/set-active-nav-link] (rest action))]
+
             (prn "Unknown action:" action))))
     actions))
 
@@ -36,6 +43,24 @@
   (case effect
     :effect/toggle-details
     (swap! store update-in [:ui :details-visibility? (first args)] not)
+
+    :effect/set-active-nav-link
+    (swap! store assoc-in [:ui :active-nav-link] (first args))
+
+    :effect/run-scroll-observer
+    (let [observer (js/IntersectionObserver.
+                     (fn [entries _]
+                       (doseq [entry (array-seq entries)]
+                         (when (.-isIntersecting entry)
+                           (let [id        (.. entry -target -id)
+                                 hash-link (str "#" id)]
+                             (effect-execute! !store [:effect/set-active-nav-link hash-link])))))
+                     #js {:root       nil
+                          :rootMargin "-20% 0px -70% 0px"
+                          :threshold  0.1})]
+      (doseq [section (array-seq (.querySelectorAll js/document "section[id]"))]
+        (.observe observer section)))
+
     nil))
 
 (defn init! []
@@ -52,7 +77,14 @@
            (run! #(effect-execute! !store %)))))
 
   ;; Trigger the initial render
-  (swap! !store assoc :initialised-at (.getTime (js/Date.))))
+  (swap! !store assoc :initialised-at (.getTime (js/Date.)))
+
+  ;; Set up scroll observer after a brief delay to ensure DOM is ready
+  ;;(js/setTimeout
+  ;;  (fn []
+  ;;    (effect-execute! !store [:effect/setup-scroll-observer]))
+  ;;  100)
+  )
 
 (defn main []
   (init!)
@@ -65,4 +97,6 @@
 (comment
   @!store
   (require '[dataspex.core :as ds])
-  (ds/inspect "Bookee app state" @!store))
+  (ds/inspect "Bookee app state" @!store)
+
+  )

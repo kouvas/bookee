@@ -36,7 +36,11 @@
        :display         "flex"
        :align-items     "center"
        :color           "black"}
-   [:&:hover {:background-color "#f0f0f0f0"}]])
+   [:&:hover {:background-color "#f0f0f0f0"}]
+   [:&.active {:background-color "#e0e0e0"
+               :font-weight      "600"
+               :border-bottom    "3px solid #333"}]
+   [:&.inactive {}]])
 
 (o/defstyled main :main
   [:& {:display         "flex"

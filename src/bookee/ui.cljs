@@ -8,7 +8,8 @@
 (defn main
   [state]
   (css/content
-    comp/navbar
+    {:replicant/on-render [[:run-scroll-observer]]}
+    (comp/navbar state)
     (css/main
       (css/container
         [:section#services
@@ -27,7 +28,7 @@
          [:h2 "Reviews"]
          [:p "Be the first to review us and share insights about your experience."]
          (repeat 5 [:br])]
-        [:section#Address
+        [:section#address
          [:h2 "Address"]
          (repeat 5 [:br])]))
     (css/footer

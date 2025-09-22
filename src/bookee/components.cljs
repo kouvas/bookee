@@ -1,16 +1,21 @@
 (ns bookee.components
   (:require [bookee.css :as css]
-            [bookee.data :as data]))
+            [bookee.data :as data]
+            [clojure.string :as str]))
 
-
-(def navbar
+(def navbar-links ["Services" "Team" "About" "Reviews" "Address"])
+(defn navbar
+  [state]
   (css/navbar
     [:ul
-     [:li [:a {:href "#services"} "Services"]]
-     [:li [:a {:href "#team"} "Team"]]
-     [:li [:a {:href "#about"} "About"]]
-     [:li [:a {:href "#reviews"} "Reviews"]]
-     [:li [:a {:href "#address"} "Address"]]]))
+     (for [link navbar-links]
+       (let [hashed-link (str "#" (str/lower-case link))]
+         [:li [:a {:class (if (= (->> state :ui :active-nav-link) hashed-link)
+                            "active"
+                            "inactive")
+                   :href  hashed-link
+                   :on    {:click [[:set-active-nav-link hashed-link]]}} link]]))
+     ]))
 
 (defn service-card
   [{:keys [id service-name duration price currency details] :as service} state]
