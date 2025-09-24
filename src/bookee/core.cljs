@@ -6,6 +6,8 @@
 ;; Global application store/state
 (defonce !store (atom {:ui {:active-section "services"}}))
 
+(defonce !scroll-observer (atom nil))
+
 (defn render-ui
   [new-state]
   (ui/main new-state))
@@ -44,22 +46,25 @@
     :effect/toggle-details
     (swap! store update-in [:ui :details-visibility? (first args)] not)
 
-    :effect/set-active-nav-link
-    (swap! store assoc-in [:ui :active-nav-link] (first args))
-
     :effect/run-scroll-observer
-    (let [observer (js/IntersectionObserver.
-                     (fn [entries _]
-                       (doseq [entry (array-seq entries)]
-                         (when (.-isIntersecting entry)
-                           (let [id        (.. entry -target -id)
-                                 hash-link (str "#" id)]
-                             (effect-execute! !store [:effect/set-active-nav-link hash-link])))))
-                     #js {:root       nil
-                          :rootMargin "-20% 0px -70% 0px"
-                          :threshold  0.1})]
-      (doseq [section (array-seq (.querySelectorAll js/document "section[id]"))]
-        (.observe observer section)))
+    (when-not @!scroll-observer
+      (let [observer (js/IntersectionObserver.
+                       (fn [entries _]
+                         ;; Find the section with the highest intersection ratio
+                         (let [best-entry (->> entries
+                                               array-seq
+                                               (filter #(.-isIntersecting %))
+                                               (sort-by #(.-intersectionRatio %) >)
+                                               first)]
+                           (when best-entry
+                             (let [id        (.. best-entry -target -id)
+                                   hash-link (str "#" id)]
+                               (when (not= hash-link (get-in @!store [:ui :active-nav-link]))
+                                 (swap! store assoc-in [:ui :active-nav-link] hash-link))))))
+                       #js {:rootMargin "-30% 0px -55% 0px"})]
+        (reset! !scroll-observer observer)
+        (doseq [section (array-seq (.querySelectorAll js/document "section[id]"))]
+          (.observe observer section))))
 
     nil))
 
@@ -79,11 +84,6 @@
   ;; Trigger the initial render
   (swap! !store assoc :initialised-at (.getTime (js/Date.)))
 
-  ;; Set up scroll observer after a brief delay to ensure DOM is ready
-  ;;(js/setTimeout
-  ;;  (fn []
-  ;;    (effect-execute! !store [:effect/setup-scroll-observer]))
-  ;;  100)
   )
 
 (defn main []
@@ -97,6 +97,4 @@
 (comment
   @!store
   (require '[dataspex.core :as ds])
-  (ds/inspect "Bookee app state" @!store)
-
-  )
+  (ds/inspect "Bookee app state" @!store))

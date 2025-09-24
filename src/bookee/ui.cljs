@@ -8,7 +8,6 @@
 (defn main
   [state]
   (css/content
-    {:replicant/on-render [[:run-scroll-observer]]}
     (comp/navbar state)
     (css/main
       (css/container

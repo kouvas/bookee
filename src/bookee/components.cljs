@@ -8,14 +8,15 @@
   [state]
   (css/navbar
     [:ul
-     (for [link navbar-links]
-       (let [hashed-link (str "#" (str/lower-case link))]
-         [:li [:a {:class (if (= (->> state :ui :active-nav-link) hashed-link)
-                            "active"
-                            "inactive")
-                   :href  hashed-link
-                   :on    {:click [[:set-active-nav-link hashed-link]]}} link]]))
-     ]))
+     (map (fn [link]
+            (let [hashed-link (str "#" (str/lower-case link))]
+              [:li {:key link}
+               [:a {:class (when (= (->> state :ui :active-nav-link) hashed-link)
+                             "active")
+                    :href  hashed-link
+                    :on    {:click [[:set-active-nav-link hashed-link]]}}
+                link]]))
+          navbar-links)]))
 
 (defn service-card
   [{:keys [id service-name duration price currency details] :as service} state]
