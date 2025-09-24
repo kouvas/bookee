@@ -6,7 +6,8 @@
   [[:* {:margin     0
         :padding    0
         :box-sizing "border-box"}]
-   [:html {:scroll-behavior "smooth"}]
+   [:html {:scroll-behavior    "smooth"
+           :scroll-padding-top "3rem"}]                ;; Add padding for sticky navbar
    [:body {:height           "100%"
            :background-color "#ececec"}]])
 
