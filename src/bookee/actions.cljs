@@ -29,5 +29,8 @@
             :ui/set-active-nav-link
             [(into [:effect/ui.set-active-nav-link] (rest action))]
 
+            :map/init-leaflet
+            [[:effect/map.init-leaflet]]
+
             (prn "Unknown action:" action))))
     actions))

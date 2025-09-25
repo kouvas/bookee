@@ -1,4 +1,5 @@
-(ns bookee.effects)
+(ns bookee.effects
+  (:require [bookee.map :as m]))
 
 (defonce !scroll-observer (atom nil))
 
@@ -42,5 +43,8 @@
 
     :effect/ui.set-active-nav-link
     (swap! store assoc-in [:ui :active-nav-link] (first args))
+
+    :effect/map.init-leaflet
+    (m/init-leaflet! store)
 
     nil))

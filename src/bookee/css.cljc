@@ -154,3 +154,22 @@
 
 (o/defstyled details-body :div
   [:& {:padding ".25rem"}])
+
+(o/defstyled map-container
+  :div
+  {:margin-top    "1rem"
+   :height        "23rem"
+   :width         "100%"
+   :border-radius ".5rem"
+   :overflow      "hidden"
+   :box-shadow    "0 2px 8px rgba(0, 0, 0, 0.1)"})
+
+(o/defstyled address-info
+  :div
+  {:display       "flex"
+   :align-items   "center"
+   :gap           ".5rem"
+   :margin-bottom "1rem"}
+  [:p {:margin "0.5rem 0"
+       :color  "#374151"}]
+  [:p:first-child {:color "#1f2937"}])

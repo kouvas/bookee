@@ -20,7 +20,7 @@
   (r/set-dispatch!
     (fn [{:replicant/keys [dom-event trigger life-cycle]} event-data]
       (when js/goog.DEBUG
-        (js/console.debug "DOM: " dom-event "TRIGGER: " trigger "LIFECYCLE: " life-cycle "EVENT: " event-data))
+        (js/console.log "DOM-EVENT: " dom-event "TRIGGER: " trigger "LIFECYCLE: " life-cycle "EVENT-DATA: " event-data))
       (->> (actions/interpolate-actions dom-event event-data)
            (actions/action->effect @!store dom-event)
            (run! #(effects/effect-execute! !store %)))))

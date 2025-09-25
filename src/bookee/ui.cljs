@@ -1,7 +1,9 @@
 (ns bookee.ui
   (:require [bookee.css :as css]
             [bookee.components :as comp]
-            [bookee.data :as data]))
+            [bookee.data :as data]
+            [bookee.icons :as icons]
+            [bookee.map :as m]))
 
 (def shop-name "La BarberShop")
 
@@ -35,6 +37,9 @@
         ;; complex js code to prevent this since it won't be a problem once we add content to Reviews, Address and footer
         [:section#address
          [:h2 "Address"]
-         (repeat 5 [:br])]))
+         (css/address-info
+           icons/map-pin-line-icon
+           [:p (:address m/shop-location)])
+         (m/leaflet-map state)]))
     (css/footer
       [:h2 "La footer"])))
