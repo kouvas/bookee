@@ -5,8 +5,9 @@
 
 (def navbar-links ["Services" "Team" "About" "Reviews" "Address"])
 (defn navbar
-  [state]
+  [state lifecycle-hooks]
   (css/navbar
+    lifecycle-hooks
     [:ul
      (map (fn [link]
             (let [hashed-link (str "#" (str/lower-case link))]

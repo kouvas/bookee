@@ -34,6 +34,9 @@
             :run-scroll-observer
             [[:effect/run-scroll-observer]]
 
+            :cleanup-scroll-observer
+            [[:effect/cleanup-scroll-observer]]
+
             :set-active-nav-link
             [(into [:effect/set-active-nav-link] (rest action))]
 
@@ -66,6 +69,11 @@
         (doseq [section (array-seq (.querySelectorAll js/document "section[id]"))]
           (.observe observer section))))
 
+    :effect/cleanup-scroll-observer
+    (when-let [observer @!scroll-observer]
+      (.disconnect observer)
+      (reset! !scroll-observer nil))
+
     nil))
 
 (defn init! []
@@ -82,9 +90,7 @@
            (run! #(effect-execute! !store %)))))
 
   ;; Trigger the initial render
-  (swap! !store assoc :initialised-at (.getTime (js/Date.)))
-
-  )
+  (swap! !store assoc :initialised-at (.getTime (js/Date.))))
 
 (defn main []
   (init!)

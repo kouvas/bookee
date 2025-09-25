@@ -8,7 +8,10 @@
 (defn main
   [state]
   (css/content
-    (comp/navbar state)
+    (comp/navbar
+      state
+      {:replicant/on-mount   [[:run-scroll-observer]]
+       :replicant/on-unmount [[:cleanup-scroll-observer]]})
     (css/main
       (css/container
         [:section#services
@@ -27,6 +30,9 @@
          [:h2 "Reviews"]
          [:p "Be the first to review us and share insights about your experience."]
          (repeat 5 [:br])]
+        ;; because address section has no content and is not tall enough, when clicking on it's navbar item, or
+        ;; scroll all the way down, the Address nav-item does not get highlighted while Review does. No need to write
+        ;; complex js code to prevent this since it won't be a problem once we add content to Reviews, Address and footer
         [:section#address
          [:h2 "Address"]
          (repeat 5 [:br])]))
