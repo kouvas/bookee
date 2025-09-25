@@ -10,8 +10,8 @@
   (css/content
     (comp/navbar
       state
-      {:replicant/on-mount   [[:run-scroll-observer]]
-       :replicant/on-unmount [[:cleanup-scroll-observer]]})
+      {:replicant/on-mount   [[:ui/run-scroll-observer]]
+       :replicant/on-unmount [[:ui/cleanup-scroll-observer]]})
     (css/main
       (css/container
         [:section#services
