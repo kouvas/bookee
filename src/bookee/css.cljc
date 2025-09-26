@@ -173,3 +173,69 @@
   [:p {:margin "0.5rem 0"
        :color  "#374151"}]
   [:p:first-child {:color "#1f2937"}])
+
+(o/defstyled reviews-container :div
+  [:& {:padding   "1rem"
+       :max-width "25rem"}]
+  [:h2 {:font-size     "1.5rem"
+        :font-weight   "600"
+        :margin-bottom "1.5rem"
+        :color         "#1f2937"}])
+
+(o/defstyled rating-summary :div
+  {:margin-bottom "2rem"}
+  [:.rating-display {:display       "flex"
+                     :align-items   "center"
+                     :gap           "1rem"
+                     :margin-bottom "1rem"}]
+  [:.stars {:display "flex"
+            :gap     "0.125rem"}]
+  [:.star {:color "#fbbf24"}]
+  [:.star-empty {:color "#e5e7eb"}]
+  [:.rating-number {:font-size   "2rem"
+                    :font-weight "700"
+                    :color       "#1f2937"}]
+  [:.rating-count {:color     "#6b7280"
+                   :font-size "0.875rem"}]
+  [:.rating-bars {:display        "flex"
+                  :flex-direction "column"
+                  :gap            "0.5rem"}]
+  [:.rating-row {:display     "flex"
+                 :align-items "center"
+                 :gap         "0.5rem"}]
+  [:.rating-label {:display     "flex"
+                   :align-items "center"
+                   :gap         "0.25rem"
+                   :min-width   "2rem"}]
+  [:.rating-bar {:flex             "1"
+                 :height           "0.5rem"
+                 :background-color "#e5e7eb"
+                 :border-radius    "0.25rem"
+                 :overflow         "hidden"}]
+  [:.rating-fill {:height           "100%"
+                  :background-color "#fbbf24"
+                  :transition       "width 0.3s ease"}]
+  [:.rating-value {:min-width  "2rem"
+                   :text-align "right"
+                   :color      "#6b7280"
+                   :font-size  "0.875rem"}])
+
+(o/defstyled review-item :div
+  {:border-top "1px solid #e5e7eb"
+   :padding    "1rem 0"}
+  [:&:first-child {:border-top "none"}]
+  [:.review-header {:display         "flex"
+                    :justify-content "space-between"
+                    :align-items     "flex-start"
+                    :margin-bottom   "0.5rem"}]
+  [:.review-author {:display        "flex"
+                    :flex-direction "column"
+                    :gap            "0.25rem"}]
+  [:.author-name {:font-weight "600"
+                  :color       "#1f2937"}]
+  [:.review-rating {:display "flex"
+                    :gap     "0.125rem"}]
+  [:.review-date {:color     "#6b7280"
+                  :font-size "0.875rem"}]
+  [:.review-text {:color       "#374151"
+                  :line-height "1.5"}])

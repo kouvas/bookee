@@ -63,3 +63,60 @@
     :services-offered [1 2 3]}])
 
 (def team-ids [9 10 11])
+
+(def reviews
+  [{:id     1
+    :author "Gordon Ramsay"
+    :rating 5
+    :review "Finally, a cut as sharp as my knives! This haircut is bloody brilliant!"
+    :date   "seconds ago"}
+   {:id     2
+    :author "Severus Snape"
+    :rating 5
+    :review "Obviously... the most precise trim I've encountered. Ten points to this barbershop."
+    :date   "5 hours ago"}
+   {:id     3
+    :author "Johnny Bravo"
+    :rating 5
+    :review "Do the monkey with me! My hair looks even MORE magnificent now. Mama would be proud!"
+    :date   "Yesterday"}
+   {:id     4
+    :author "Gandalf the Grey"
+    :rating 5
+    :review "You shall not pass... without getting your beard trimmed here! Simply magical."
+    :date   "2 days ago"}
+   {:id     5
+    :author "Walter White"
+    :rating 5
+    :review "The chemistry is perfect. 99.1% pure satisfaction. You're goddamn right this is the best cut."
+    :date   "3 days ago"}
+   {:id     6
+    :author "Dwight Schrute"
+    :rating 5
+    :review "Fact: This is the superior barbershop. Bears. Beets. Best haircuts."
+    :date   "4 days ago"}
+   {:id     7
+    :author "Ron Swanson"
+    :rating 4
+    :review "I normally cut my own hair, but this was acceptable. They didn't talk too much."
+    :date   "5 days ago"}
+   {:id     8
+    :author "Goku"
+    :rating 5
+    :review "My hair has reached a power level over 9000! Even better than Super Saiyan style!"
+    :date   "1 week ago"}
+   {:id     9
+    :author "Jack Sparrow"
+    :rating 5
+    :review "This is the day you will always remember as the day you got the best haircut from... wait, where's the rum?"
+    :date   "1 week ago"}
+   {:id     10
+    :author "Sherlock Holmes"
+    :rating 5
+    :review "Elementary! The precision, the attention to detail, the perfect angle of each cut. Fascinating."
+    :date   "2 weeks ago"}
+   {:id     11
+    :author "Spaliaras"
+    :rating 4
+    :review "ΕΜΠ1.... γία κούρεμα φυσικά!"
+    :date   "3 weeks ago"}])
