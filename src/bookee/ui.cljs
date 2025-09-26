@@ -27,8 +27,9 @@
            (comp/team-card team-member state))]
         [:section#about
          [:h2 "About"]
-         (repeat 5 [:br])]
+         (comp/about data/shop-description)]
         [:section#reviews
+         [:h2 "Reviews"]
          (comp/reviews-section state data/reviews)]
         ;; because address section has no content and is not tall enough, when clicking on it's navbar item, or
         ;; scroll all the way down, the Address nav-item does not get highlighted while Review does. No need to write

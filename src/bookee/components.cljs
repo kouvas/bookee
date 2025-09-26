@@ -60,6 +60,13 @@
                (:service-name service)])]))]
       [:div.team-arrow ">"])))
 
+(defn about
+  [desc]
+  (css/about-container
+    [:p (:intro desc)]
+    [:p (:tagline desc)]
+    [:p [:strong (:closing desc)]]))
+
 (defn star-rating [rating]
   [:div.stars
    (for [i (range 1 6)]
@@ -94,7 +101,6 @@
 (defn reviews-section [state reviews]
   (let [stats (calculate-rating-stats reviews)]
     (css/reviews-container
-      [:h2 "Reviews"]
       (css/rating-summary
         [:div.rating-display
          [:span.rating-number (.toFixed (:average stats) 1)]

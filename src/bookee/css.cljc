@@ -239,3 +239,17 @@
                   :font-size "0.875rem"}]
   [:.review-text {:color       "#374151"
                   :line-height "1.5"}])
+
+(o/defstyled about-container :div
+  {:padding   "1rem"
+   :max-width "25rem"}
+  [:h2 {:font-size     "1.5rem"
+        :font-weight   "600"
+        :margin-bottom "1.5rem"
+        :color         "#1f2937"}]
+  [:p {:color         "#374151"
+       :line-height   "1.6"
+       :margin-bottom "1rem"}]
+  [:p:first-of-type {:font-size   "1.125rem"
+                     :font-weight "500"
+                     :color       "#1f2937"}])
