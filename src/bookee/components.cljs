@@ -2,7 +2,10 @@
   (:require [bookee.css :as css]
             [bookee.data :as data]
             [bookee.icons :as icons]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            ["@js-joda/timezone" :as joda-tz]          ; load tz data
+            [tick.core :as t]
+            [tick.locale-en-us]))
 
 (def navbar-links ["Services" "Team" "About" "Reviews" "Address"])
 (defn navbar
@@ -120,43 +123,40 @@
          (review-item review)]))))
 
 (defn get-current-status []
-  (let [now         (js/Date.)
-        day         (-> now .getDay)
-        hours       (.getHours now)
-        minutes     (.getMinutes now)
-        day-map     {0 :sunday 1 :monday 2 :tuesday 3 :wednesday
-                     4 :thursday 5 :friday 6 :saturday}
-        today-hours (get data/working-hours (day-map day))]
-    (if (:closed? today-hours)
+  ;; For now, use local time - timezone loading is complex in browser
+  ;; TODO: Add proper timezone support with initialization
+  (let [now          (t/now)
+        current-time (t/time now)
+        day-of-week  (t/day-of-week now)
+        ;; Map Java day-of-week to our keyword format
+        day-map      {:MONDAY    :monday
+                      :TUESDAY   :tuesday
+                      :WEDNESDAY :wednesday
+                      :THURSDAY  :thursday
+                      :FRIDAY    :friday
+                      :SATURDAY  :saturday
+                      :SUNDAY    :sunday}
+        today-hours  (get data/working-hours (day-map day-of-week))
+        open-time    (:open today-hours)
+        close-time   (:close today-hours)]
+    (cond
+      ;; Shop is closed all day (no hours defined)
+      (or (:closed? today-hours)
+          (nil? open-time)
+          (nil? close-time))
       {:status :closed :message "Closed"}
-      (let [current-time (+ (* hours 100) minutes)
-            open-time    (-> (:open today-hours)
-                             (str/replace #"(\d+):(\d+) (AM|PM)"
-                                          (fn [[_ h m period]]
-                                            (let [hour (js/parseInt h)]
-                                              (str (if (and (= period "PM") (not= hour 12))
-                                                     (+ hour 12)
-                                                     (if (and (= period "AM") (= hour 12))
-                                                       0
-                                                       hour))))))
-                             js/parseInt
-                             (* 100))
-            close-time   (-> (:close today-hours)
-                             (str/replace #"(\d+):(\d+) (AM|PM)"
-                                          (fn [[_ h m period]]
-                                            (let [hour (js/parseInt h)]
-                                              (str (if (and (= period "PM") (not= hour 12))
-                                                     (+ hour 12)
-                                                     (if (and (= period "AM") (= hour 12))
-                                                       0
-                                                       hour))))))
-                             js/parseInt
-                             (* 100))]
-        (if (< current-time open-time)
-          {:status :closed :message (str "Opens at " (:open today-hours))}
-          (if (> current-time close-time)
-            {:status :closed :message "Closed"}
-            {:status :open :message (str "Open • Closes at " (:close today-hours))}))))))
+
+      ;; Before opening time
+      (t/< current-time open-time)
+      {:status :closed :message (str "Opens at " (t/format "h:mm a" open-time))}
+
+      ;; After closing time
+      (t/> current-time close-time)
+      {:status :closed :message "Closed"}
+
+      ;; Currently open
+      :else
+      {:status :open :message (str "Open • Closes at " (t/format "h:mm a" close-time))})))
 
 (defn shop-banner
   [state reviews]
@@ -182,8 +182,6 @@
           (if (= (:status current-status) :open)
             [:span {:class "open"} (:message current-status)]
             [:span {:class "closed"} (:message current-status)])
-          (js/console.log (:status current-status))
-
           [:span.chevron {:class (when hours-visible? "collapsed")}
            icons/chevron-down-icon]]]]]
       (when hours-visible?
@@ -198,6 +196,6 @@
             [:div.day-row {:key day}
              [:span (str/capitalize (name day))]
              [:span
-              (if (:closed? hours)
+              (if (or (:closed? hours) (nil? (:open hours)))
                 [:span.closed "Closed"]
-                (str (:open hours) " - " (:close hours)))]])]]))))
+                (str (t/format "h:mm a" (:open hours)) " - " (t/format "h:mm a" (:close hours))))]])]]))))

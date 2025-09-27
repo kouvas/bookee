@@ -1,4 +1,5 @@
-(ns bookee.data)
+(ns bookee.data
+  (:require [tick.core :as t]))
 
 (def services
   [{:id           1
@@ -140,10 +141,10 @@
    :closing "Come for the view, stay for the brew, leave with a haircut that says 'Ooh shall la la!'"})
 
 (def working-hours
-  {:monday    {:open "9:00 AM" :close "9:00 PM" :closed? false}
-   :tuesday   {:open "9:00 AM" :close "9:00 PM" :closed? false}
-   :wednesday {:open "9:00 AM" :close "9:00 PM" :closed? false}
-   :thursday  {:open "9:00 AM" :close "9:00 PM" :closed? false}
-   :friday    {:open "9:00 AM" :close "9:00 PM" :closed? false}
-   :saturday  {:open "9:00 AM" :close "3:00 PM" :closed? false}
+  {:monday    {:open (t/time "09:00") :close (t/time "21:00") :closed? false}
+   :tuesday   {:open (t/time "09:00") :close (t/time "21:00") :closed? false}
+   :wednesday {:open (t/time "09:00") :close (t/time "21:00") :closed? false}
+   :thursday  {:open (t/time "09:00") :close (t/time "21:00") :closed? false}
+   :friday    {:open (t/time "09:00") :close (t/time "21:00") :closed? false}
+   :saturday  {:open (t/time "09:00") :close (t/time "15:00") :closed? false}
    :sunday    {:closed? true}})
