@@ -89,6 +89,78 @@
        :box-sizing       "border-box"}]
   [:section {:margin-bottom "1rem"}])
 
+(o/defstyled shop-banner :div
+  [:at-media {:min-width (:lg breakpoints)}
+   {:display "none"}]
+
+  {:padding       "1.5rem 1rem"
+   :border-bottom "1px solid #e5e7eb"
+   :margin-bottom "1rem"}
+
+  [:.banner-content {:display     "flex"
+                     :gap         "1rem"
+                     :align-items "flex-start"}]
+  [:.shop-logo {:width         "80px"
+                :height        "80px"
+                :border-radius "0.5rem"
+                :object-fit    "cover"
+                :flex-shrink   "0"}]
+  [:.shop-info {:flex           "1"
+                :display        "flex"
+                :flex-direction "column"
+                :gap            "0.5rem"}]
+  [:.shop-header {:display         "flex"
+                  :justify-content "space-between"
+                  :align-items     "flex-start"}]
+  [:.shop-name {:font-size   "1.25rem"
+                :font-weight "600"
+                :color       "#1f2937"}]
+  [:.rating-line {:display     "flex"
+                  :align-items "center"
+                  :gap         "0.5rem"}]
+  [:.rating-value {:font-weight "600"
+                   :color       "#1f2937"}]
+  [:.review-count {:color     "#6b7280"
+                   :font-size "0.875rem"}]
+  [:.hours-container {:display     "flex"
+                      :align-items "center"
+                      :gap         "0.5rem"}]
+  [:.hours-button {:display       "flex"
+                   :align-items   "center"
+                   :gap           "0.25rem"
+                   :padding       "0.25rem 0.5rem"
+                   :background    "transparent"
+                   :border        "none"
+                   :cursor        "pointer"
+                   ;;:color         "#16a34a"
+                   :font-size     "0.875rem"
+                   :border-radius "0.25rem"
+                   :transition    "background-color 0.2s"}
+   [:.open {:color (:success palette)}
+    [:&:hover {:background-color (:success-hover palette)}]]
+   [:.closed {:color (:danger palette)}
+    [:&:hover {:background-color (:danger-hover palette)}]]]
+
+  [:.hours-dropdown {:margin-top       "1rem"
+                     :padding          "1rem"
+                     :max-width        (:xs breakpoints)
+                     :background-color (:grey-10 palette)
+                     :border-radius    "0.5rem"}]
+  [:.hours-title {:font-weight   "600"
+                  :margin-bottom "0.5rem"}]
+  [:.hours-list {:display        "flex"
+                 :flex-direction "column"
+                 :gap            "0.25rem"}]
+  [:.day-row {:display         "flex"
+              :justify-content "space-between"
+              :padding         "0.25rem 0"
+              :font-size       "0.875rem"}]
+  [:.day-name {}]
+  [:.day-hours {}]
+  ;;[:.closed {:color "#ef4444"}]
+  [:.chevron {:transition "transform 0.2s"
+              :display    "inline-block"}]
+  [:.chevron.collapsed {:transform "rotate(180deg)"}])
 
 ;; Base card component (reusable, can be inherited, generates a css class)
 (o/defstyled base-card :div
