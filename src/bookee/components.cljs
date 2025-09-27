@@ -118,3 +118,86 @@
       (for [review reviews]
         [:div {:key (:id review)}
          (review-item review)]))))
+
+(defn get-current-status []
+  (let [now         (js/Date.)
+        day         (-> now .getDay)
+        hours       (.getHours now)
+        minutes     (.getMinutes now)
+        day-map     {0 :sunday 1 :monday 2 :tuesday 3 :wednesday
+                     4 :thursday 5 :friday 6 :saturday}
+        today-hours (get data/working-hours (day-map day))]
+    (if (:closed? today-hours)
+      {:status :closed :message "Closed"}
+      (let [current-time (+ (* hours 100) minutes)
+            open-time    (-> (:open today-hours)
+                             (str/replace #"(\d+):(\d+) (AM|PM)"
+                                          (fn [[_ h m period]]
+                                            (let [hour (js/parseInt h)]
+                                              (str (if (and (= period "PM") (not= hour 12))
+                                                     (+ hour 12)
+                                                     (if (and (= period "AM") (= hour 12))
+                                                       0
+                                                       hour))))))
+                             js/parseInt
+                             (* 100))
+            close-time   (-> (:close today-hours)
+                             (str/replace #"(\d+):(\d+) (AM|PM)"
+                                          (fn [[_ h m period]]
+                                            (let [hour (js/parseInt h)]
+                                              (str (if (and (= period "PM") (not= hour 12))
+                                                     (+ hour 12)
+                                                     (if (and (= period "AM") (= hour 12))
+                                                       0
+                                                       hour))))))
+                             js/parseInt
+                             (* 100))]
+        (if (< current-time open-time)
+          {:status :closed :message (str "Opens at " (:open today-hours))}
+          (if (> current-time close-time)
+            {:status :closed :message "Closed"}
+            {:status :open :message (str "Open • Closes at " (:close today-hours))}))))))
+
+(defn shop-banner
+  [state reviews]
+  (let [stats          (calculate-rating-stats reviews)
+        hours-visible? (get-in state [:ui :details-visibility? :working-hours] false)
+        current-status (get-current-status)]
+    (css/shop-banner
+      [:div.banner-content
+       [:img.shop-logo
+        {:src "img/barbershop.png"
+         :alt "LaBarberShop logo"}]
+       [:div.shop-info
+        [:div.shop-header
+         [:h1.shop-name (:name data/shop-info)]]
+        [:div.rating-line
+         [:span.rating-value (.toFixed (:average stats) 1)]
+         [:span.star icons/star-icon]
+         [:span.review-count (str "(" (:total stats) " reviews)")]]
+        [:div.hours-container
+         [:button.hours-button
+          {:on {:click [[:ui/toggle-details :working-hours]]}}
+          [:span icons/clock-icon]
+          (if (= (:status current-status) :open)
+            [:span {:class "open"} (:message current-status)]
+            [:span {:class "closed"} (:message current-status)])
+          (js/console.log (:status current-status))
+
+          [:span.chevron {:class (when hours-visible? "collapsed")}
+           icons/chevron-down-icon]]]]]
+      (when hours-visible?
+        [:div.hours-dropdown
+         [:div.hours-title "Business Hours"]
+         [:div.hours-list
+          (for [[day hours] (sort-by (fn [[k _]]
+                                       (case k
+                                         :monday 0 :tuesday 1 :wednesday 2
+                                         :thursday 3 :friday 4 :saturday 5 :sunday 6))
+                                     data/working-hours)]
+            [:div.day-row {:key day}
+             [:span (str/capitalize (name day))]
+             [:span
+              (if (:closed? hours)
+                [:span.closed "Closed"]
+                (str (:open hours) " - " (:close hours)))]])]]))))

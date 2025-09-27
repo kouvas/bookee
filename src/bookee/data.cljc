@@ -126,7 +126,24 @@
     :review "ΕΜΠ1.... γία κούρεμα φυσικά!"
     :date   "3 weeks ago"}])
 
+(def shop-info
+  {:name    "La Barber Shop"
+   :lat     48.8583596
+   :lng     2.2949375
+   :zoom    15
+   :address "Quai Jacques Chirac, 75007 Paris, France"
+   :phone   "+33 23 434 4567"})
+
 (def shop-description
   {:intro   "Welcome to La BarberShop, where even the Eiffel Tower leans in for a better look at our magnificent haircuts!"
    :tagline "We've been making Parisians look magnifique since 2018. Our barbers are so skilled, they could give a baguette a fade and it would still look délicieux."
    :closing "Come for the view, stay for the brew, leave with a haircut that says 'Ooh shall la la!'"})
+
+(def working-hours
+  {:monday    {:open "9:00 AM" :close "9:00 PM" :closed? false}
+   :tuesday   {:open "9:00 AM" :close "9:00 PM" :closed? false}
+   :wednesday {:open "9:00 AM" :close "9:00 PM" :closed? false}
+   :thursday  {:open "9:00 AM" :close "9:00 PM" :closed? false}
+   :friday    {:open "9:00 AM" :close "9:00 PM" :closed? false}
+   :saturday  {:open "9:00 AM" :close "3:00 PM" :closed? false}
+   :sunday    {:closed? true}})

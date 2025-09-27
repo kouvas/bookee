@@ -16,6 +16,7 @@
        :replicant/on-unmount [[:ui/cleanup-scroll-observer]]})
     (css/main
       (css/container
+        (comp/shop-banner state data/reviews)
         [:section#services
          [:h2 "Services"]
          (for [service data/services]
@@ -38,7 +39,7 @@
          [:h2 "Address"]
          (css/address-info
            icons/map-pin-line-icon
-           [:p (:address m/shop-location)])
+           [:p (:address data/shop-info)])
          (m/leaflet-map state)]))
     (css/footer
       [:h2 "La footer"])))

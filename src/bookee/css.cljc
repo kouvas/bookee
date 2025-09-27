@@ -113,14 +113,12 @@
                   :justify-content "space-between"
                   :align-items     "flex-start"}]
   [:.shop-name {:font-size   "1.25rem"
-                :font-weight "600"
-                :color       "#1f2937"}]
+                :font-weight "600"}]
   [:.rating-line {:display     "flex"
                   :align-items "center"
                   :gap         "0.5rem"}]
-  [:.rating-value {:font-weight "600"
-                   :color       "#1f2937"}]
-  [:.review-count {:color     "#6b7280"
+  [:.rating-value {:font-weight "600"}]
+  [:.review-count {:color     (:grey-30 palette)
                    :font-size "0.875rem"}]
   [:.hours-container {:display     "flex"
                       :align-items "center"
@@ -132,14 +130,13 @@
                    :background    "transparent"
                    :border        "none"
                    :cursor        "pointer"
-                   ;;:color         "#16a34a"
                    :font-size     "0.875rem"
                    :border-radius "0.25rem"
-                   :transition    "background-color 0.2s"}
-   [:.open {:color (:success palette)}
-    [:&:hover {:background-color (:success-hover palette)}]]
-   [:.closed {:color (:danger palette)}
-    [:&:hover {:background-color (:danger-hover palette)}]]]
+                   :transition    "background-color 0.2s"}]
+  [:.closed {:color (:danger palette)}
+   [:&:hover {:background-color (:danger-hover palette)}]]
+  [:.open {:color (:success palette)}
+   [:&:hover {:background-color (:success-hover palette)}]]
 
   [:.hours-dropdown {:margin-top       "1rem"
                      :padding          "1rem"
@@ -155,12 +152,9 @@
               :justify-content "space-between"
               :padding         "0.25rem 0"
               :font-size       "0.875rem"}]
-  [:.day-name {}]
-  [:.day-hours {}]
-  ;;[:.closed {:color "#ef4444"}]
   [:.chevron {:transition "transform 0.2s"
               :display    "inline-block"}]
-  [:.chevron.collapsed {:transform "rotate(180deg)"}])
+  [:.chevron.collapsed {:transform "rotate(-180deg)"}])
 
 ;; Base card component (reusable, can be inherited, generates a css class)
 (o/defstyled base-card :div

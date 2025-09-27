@@ -1,11 +1,7 @@
 (ns bookee.map
-  (:require [bookee.css :as css]))
+  (:require [bookee.css :as css]
+            [bookee.data :as data]))
 
-(def shop-location
-  {:lat     48.8583596
-   :lng     2.2949375
-   :zoom    15
-   :address "Quai Jacques Chirac, 75007 Paris, France"})
 
 (defn load-leaflet-css! []
   (when-not (.getElementById js/document "leaflet-css")
@@ -40,7 +36,7 @@
     (fn []
       (when-let [container (.getElementById js/document "map")]
         (when-not (.-_leaflet_id container)
-          (let [{:keys [lat lng zoom]} shop-location
+          (let [{:keys [lat lng zoom]} data/shop-info
                 map-instance (.map js/L container #js {:zoomControl true})
                 tile-layer   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution  "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"]
