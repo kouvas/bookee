@@ -49,7 +49,7 @@
    :z-index          "1000"}
   [:ul {:display         "flex"
         :width           "100%"
-        :margin-left     ".5rem"
+        :padding-left    ".5rem"
         :margin-bottom   "1.5rem"
         :scrollbar-width "none"
         :list-style      "none"
