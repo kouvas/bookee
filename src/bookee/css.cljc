@@ -2,6 +2,32 @@
   (:require [lambdaisland.ornament :as o])
   #?(:cljs (:require-macros bookee.css)))
 
+(def breakpoints
+  {:xs "320px"
+   :sm "480px"
+   :md "768px"
+   :lg "992px"
+   :xl "1200"})
+
+(def palette
+  {:primary       "white"
+   :secondary     ""
+   :success       "#16a34a"
+   :success-hover "#f0fdf4"
+   :danger        "#dc2626"
+   :danger-hover  "#ffe7e7"
+   :warning       ""
+   :info          "#0077cc"
+   :info-hover    "#005897"
+
+   ;; support colors
+   :grey-10       "#f9fafb"
+   :grey-20       "#ececec"
+   :grey-25       "#dadadaf0"
+   :grey-30       "#6b7280"
+
+   :star          "#fbbf24"})
+
 (def global-styles
   [[:* {:margin     0
         :padding    0
@@ -9,13 +35,13 @@
    [:html {:scroll-behavior    "smooth"
            :scroll-padding-top "3rem"}]                ;; Add padding for sticky navbar
    [:body {:height           "100%"
-           :background-color "#ececec"}]])
+           :background-color (:grey-20 palette)}]])
 
 (o/defstyled content :div
   {})
 
 (o/defstyled navbar :nav
-  {:background-color "white"
+  {:background-color (:primary palette)
    :box-shadow       "3px 3px 5px rgb(0, 0, 0, 0.1)"
    :top              "0"
    :width            "100%"
@@ -37,11 +63,10 @@
        :display         "flex"
        :align-items     "center"
        :color           "black"}
-   [:&:hover {:background-color "#f0f0f0f0"}]
-   [:&.active {:background-color "#e0e0e0"
+   [:&:hover {:background-color (:grey-25 palette)}]
+   [:&.active {:background-color (:grey-25 palette)
                :font-weight      "600"
-               :border-bottom    "3px solid #333"}]
-   [:&.inactive {}]])
+               :border-bottom    "3px solid #333"}]])
 
 (o/defstyled main :main
   [:& {:display         "flex"
@@ -49,10 +74,10 @@
        :justify-content "center"
        :align-items     "center"
        :width           "100%"
-       ; Padding on all sides for consistent spacing
        :padding         "1rem"}])
+
 (o/defstyled container :div
-  [:& {:background-color "#ffffff"
+  [:& {:background-color (:primary palette)
        :width            "100%"
        :max-width        "896px"
        :min-height       "90vh"
@@ -64,14 +89,10 @@
        :box-sizing       "border-box"}]
   [:section {:margin-bottom "1rem"}])
 
-(o/defstyled footer :footer
-  {:background-color "#e06363"
-   :color            "white"}
-  [:h2 {:padding "5rem"}])
 
 ;; Base card component (reusable, can be inherited, generates a css class)
 (o/defstyled base-card :div
-  {:background-color "#ffffff"
+  {:background-color (:primary palette)
    :border-radius    "0.8rem"
    :box-shadow       "0 2px 8px rgba(0,0,0,0.1)"
    :padding          "1rem"
@@ -105,33 +126,33 @@
                    :flex-direction "column"
                    :gap            "0.25rem"}]
   [:.team-name {:font-size   "1.125rem"
-                :font-weight "600"
-                :color       "#1f2937"}]
+                :font-weight "600"}]
 
   [:.team-role {:font-size "0.875rem"
-                :color     "#6b7280"}]
+                :color     (:grey-30 palette)}]
 
   [:.team-specialties {:display    "flex"
                        :flex-wrap  "wrap"
                        :gap        "0.25rem"
                        :margin-top "0.5rem"}]
 
-  [:.specialty-badge {:background-color "#f3f4f6"
-                      :color            "#374151"
+  [:.specialty-badge {:background-color (:grey-20 palette)
+                      :color            (:grey-30 palette)
                       :padding          "0.125rem 0.5rem"
                       :border-radius    "0.375rem"
+                      :font-weight      "500"
                       :font-size        "0.75rem"}]
 
-  [:.team-arrow {:color       "#9ca3af"
+  [:.team-arrow {:color       (:info palette)
                  :flex-shrink "0"
                  :transition  "transform 0.2s ease"}]
 
   [:&:hover [:.team-arrow {:transform "translateX(4px)"
-                           :color     "#4b5563"}]])
+                           :color     (:info-hover palette)}]])
 
 (o/defstyled details-link :a
-  {:color           "#0077cc"                          ; base color
-   :text-decoration "none"                             ; remove underline
+  {:color           (:info palette)
+   :text-decoration "none"
    :font-weight     "500"
    :position        "relative"
    :transition      "color 0.2s ease"}
@@ -142,12 +163,12 @@
              :bottom           "-2px"
              :width            "100%"
              :height           "2px"
-             :background       "#0077cc"
+             :background       (:info palette)
              :transform        "scaleX(0)"
              :transform-origin "right"
              :transition       "transform 0.3s ease"}]
 
-  [:&:hover {:color "#005fa3"}]                        ; darker on hover
+  [:&:hover {:color (:info-hover palette)}]
 
   [:&:hover:after {:transform        "scaleX(1)"
                    :transform-origin "left"}])
@@ -170,17 +191,12 @@
    :align-items   "center"
    :gap           ".5rem"
    :margin-bottom "1rem"}
-  [:p {:margin "0.5rem 0"
-       :color  "#374151"}]
-  [:p:first-child {:color "#1f2937"}])
+  [:p {:margin "0.5rem 0"}])
 
 (o/defstyled reviews-container :div
   [:& {:padding   "1rem"
        :max-width "25rem"}]
-  [:h2 {:font-size     "1.5rem"
-        :font-weight   "600"
-        :margin-bottom "1.5rem"
-        :color         "#1f2937"}])
+  )
 
 (o/defstyled rating-summary :div
   {:margin-bottom "2rem"}
@@ -190,12 +206,11 @@
                      :margin-bottom "1rem"}]
   [:.stars {:display "flex"
             :gap     "0.125rem"}]
-  [:.star {:color "#fbbf24"}]
-  [:.star-empty {:color "#e5e7eb"}]
+  [:.star {:color (:star palette)}]
+  [:.star-empty {:color (:grey-10 palette)}]
   [:.rating-number {:font-size   "2rem"
-                    :font-weight "700"
-                    :color       "#1f2937"}]
-  [:.rating-count {:color     "#6b7280"
+                    :font-weight "700"}]
+  [:.rating-count {:color     (:grey-30 palette)
                    :font-size "0.875rem"}]
   [:.rating-bars {:display        "flex"
                   :flex-direction "column"
@@ -209,15 +224,15 @@
                    :min-width   "2rem"}]
   [:.rating-bar {:flex             "1"
                  :height           "0.5rem"
-                 :background-color "#e5e7eb"
+                 :background-color (:grey-20 palette)
                  :border-radius    "0.25rem"
                  :overflow         "hidden"}]
   [:.rating-fill {:height           "100%"
-                  :background-color "#fbbf24"
+                  :background-color (:star palette)
                   :transition       "width 0.3s ease"}]
   [:.rating-value {:min-width  "2rem"
                    :text-align "right"
-                   :color      "#6b7280"
+                   :color      (:grey-30 palette)
                    :font-size  "0.875rem"}])
 
 (o/defstyled review-item :div
@@ -231,25 +246,23 @@
   [:.review-author {:display        "flex"
                     :flex-direction "column"
                     :gap            "0.25rem"}]
-  [:.author-name {:font-weight "600"
-                  :color       "#1f2937"}]
+  [:.author-name {:font-weight "500"}]
   [:.review-rating {:display "flex"
                     :gap     "0.125rem"}]
-  [:.review-date {:color     "#6b7280"
+  [:.review-date {:color     (:grey-30 palette)
                   :font-size "0.875rem"}]
-  [:.review-text {:color       "#374151"
+  [:.review-text {:font-weight "300"
                   :line-height "1.5"}])
 
 (o/defstyled about-container :div
   {:padding   "1rem"
    :max-width "25rem"}
-  [:h2 {:font-size     "1.5rem"
-        :font-weight   "600"
-        :margin-bottom "1.5rem"
-        :color         "#1f2937"}]
-  [:p {:color         "#374151"
-       :line-height   "1.6"
+  [:p {:line-height   "1.6"
        :margin-bottom "1rem"}]
   [:p:first-of-type {:font-size   "1.125rem"
-                     :font-weight "500"
-                     :color       "#1f2937"}])
+                     :font-weight "500"}])
+
+(o/defstyled footer :footer
+  {:background-color "black"
+   :color            "white"}
+  [:h2 {:padding "5rem"}])
