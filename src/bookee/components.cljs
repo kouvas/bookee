@@ -1,5 +1,6 @@
 (ns bookee.components
   (:require [bookee.css :as css]
+            [bookee.navigation :as nav]
             [bookee.data :as data]
             [bookee.icons :as icons]
             [clojure.string :as str]
@@ -26,9 +27,15 @@
 (defn service-card
   [{:keys [id service-name duration price currency details] :as service} state]
   (let [details-visible? (get-in state [:ui :details-visibility? id] false)
-        details-text     (if details-visible? "Hide details" "Details")]
+        details-text     (if details-visible? "Hide details" "Details")
+        selected?        (= (:selected-service state) id)
+        nav-state        (nav/get-current-state (:nav-wmem state))
+        current-view     (nav/get-view nav-state)]
     (css/service-card
-      {:id (str "service_" id)}
+      {:id    (str "service_" id)
+       :class (when selected? "selected")
+       :on    (when (#{:main :services} current-view)
+                {:click [[:select-service id]]})}
       [:h3 service-name]
       [:span (str duration " min") " mins • "]
       [:span (str (get data/currencies currency) price)]
@@ -42,9 +49,15 @@
 (defn team-card
   [{:keys [id name surname img details services-offered] :as user} state]
   (let [details-visible? (get-in state [:ui :details-visibility? id] false)
-        details-text     (if details-visible? "Hide details" "Details")]
+        details-text     (if details-visible? "Hide details" "Details")
+        selected?        (= (:selected-team state) id)
+        nav-state        (nav/get-current-state (:nav-wmem state))
+        current-view     (nav/get-view nav-state)]
     (css/team-card
-      {:id (str "team_member_" id)}
+      {:id    (str "team_member_" id)
+       :class (when selected? "selected")
+       :on    (when (#{:main :team} current-view)
+                {:click [[:select-team id]]})}
       [:img.team-image {:src img :alt (str name " " surname)}]
       [:div.team-content
        [:div.team-name (str name " " surname)]

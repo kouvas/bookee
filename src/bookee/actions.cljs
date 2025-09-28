@@ -17,6 +17,9 @@
     (fn [action]
       (or false
           (case (first action)
+            :action/assoc-in
+            [(into [:effect/assoc-in] (rest action))]
+
             :ui/toggle-details
             [(into [:effect/ui.toggle-details] (rest action))]
 
@@ -31,6 +34,18 @@
 
             :map/init-leaflet
             [[:effect/map.init-leaflet]]
+
+            :select-service
+            [[:effect/select-service (second action)]]
+
+            :select-team
+            [[:effect/select-team (second action)]]
+
+            :navigate/back
+            [[:effect/navigate-back]]
+
+            :navigate/forward
+            [[:effect/navigate-forward]]
 
             (prn "Unknown action:" action))))
     actions))

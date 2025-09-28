@@ -9,6 +9,7 @@
                   {:target      :browser
                    :modules     {:main {:init-fn bookee.core/main}}
                    :dev         {:output-dir "resources/public/js"}
+                   ;;:release     {:compiler-options {:optimizations :simple}} ; why does it increase js file size?
                    :build-hooks [(bookee.hooks/write-styles-hook)]}
 
                   :portfolio

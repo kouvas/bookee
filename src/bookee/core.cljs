@@ -1,11 +1,14 @@
 (ns bookee.core
   (:require [bookee.ui :as ui]
+            [bookee.navigation :as nav]
             [bookee.actions :as actions]
             [bookee.effects :as effects]
             [replicant.dom :as r]))
 
-;; Global application store/state
-(defonce !store (atom {:ui {}}))
+(defonce !store (atom {:ui               {}
+                       :nav-wmem         (nav/init-statechart)
+                       :selected-service nil
+                       :selected-team    nil}))
 
 (defn render-ui
   [new-state]
@@ -25,7 +28,6 @@
            (actions/action->effect @!store dom-event)
            (run! #(effects/effect-execute! !store %)))))
 
-  ;; Trigger the initial render
   (swap! !store assoc :initialised-at (.getTime (js/Date.))))
 
 (defn main []
@@ -39,4 +41,6 @@
 (comment
   @!store
   (require '[dataspex.core :as ds])
-  (ds/inspect "Bookee app state" @!store))
+  (ds/inspect "Bookee app state" @!store)
+
+  )
