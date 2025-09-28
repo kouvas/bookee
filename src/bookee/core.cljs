@@ -5,7 +5,7 @@
             [replicant.dom :as r]))
 
 ;; Global application store/state
-(defonce !store (atom {:ui {:active-section "services"}}))
+(defonce !store (atom {:ui {}}))
 
 (defn render-ui
   [new-state]
