@@ -87,16 +87,20 @@
       (main-view state)
 
       :services
-      (services-view state)
+      (css/view-container
+        (services-view state))
 
       :team
-      (team-view state)
+      (css/view-container
+        (team-view state))
 
       :calendar
-      (calendar-view state)
+      (css/view-container
+        (calendar-view state))
 
       :verification
-      (verification-view state)
+      (css/view-container
+        (verification-view state))
 
       (do
         (t/log! :warn

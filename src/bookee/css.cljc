@@ -97,6 +97,16 @@
        :box-sizing       "border-box"}]
   [:section {:margin-bottom "1rem"}])
 
+(o/defstyled view-container :div
+  {:background-color (:primary palette)
+   :width            "calc(100% - 2rem)"
+   :max-width        (:md breakpoints)
+   :box-shadow       "0 4px 12px rgba(0,0,0,0.1)"
+   :margin           "1rem auto"
+   :padding          "1rem"
+   :border-radius    "0.8rem"
+   :box-sizing       "border-box"})
+
 (o/defstyled base-shop-banner :div
   [:.shop-logo {:border-radius "0.5rem"
                 :object-fit    "cover"}]
