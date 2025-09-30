@@ -1,5 +1,6 @@
 {:deps           {:aliases [:dev]}
  :cache-blockers #{lambdaisland.ornament}
+ :build-defaults {:compiler-options {:warnings {:fn-deprecated false}}}
  :dev-http       {8090 {:root             "resources/public"
                         :host             "0.0.0.0"
                         :push-state/index "index.html"}

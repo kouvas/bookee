@@ -3,7 +3,8 @@
             [bookee.navigation :as nav]
             [bookee.actions :as actions]
             [bookee.effects :as effects]
-            [replicant.dom :as r]))
+            [replicant.dom :as r]
+            [taoensso.telemere :as tel]))
 
 (defonce !store (atom {:ui               {}
                        :nav-wmem         (nav/init-statechart)
@@ -15,6 +16,7 @@
   (ui/main new-state))
 
 (defn init! []
+  (tel/set-min-level! :debug)
   (add-watch !store ::render
              (fn [_ _ _ new-state]
                (r/render
@@ -22,8 +24,7 @@
                  (render-ui new-state))))
   (r/set-dispatch!
     (fn [{:replicant/keys [dom-event trigger life-cycle]} event-data]
-      (when js/goog.DEBUG
-        (js/console.log "DOM-EVENT: " dom-event "TRIGGER: " trigger "LIFECYCLE: " life-cycle "EVENT-DATA: " event-data))
+      (tel/spy! :debug [life-cycle trigger event-data])
       (->> (actions/interpolate-actions dom-event event-data)
            (actions/action->effect @!store dom-event)
            (run! #(effects/effect-execute! !store %)))))
