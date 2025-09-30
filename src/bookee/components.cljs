@@ -171,32 +171,33 @@
       :else
       {:status :open :message (str "Open • Closes at " (t/format "h:mm a" close-time))})))
 
-(defn shop-banner
+(defn base-shop-banner
   [state reviews]
   (let [stats          (calculate-rating-stats reviews)
         hours-visible? (get-in state [:ui :details-visibility? :working-hours] false)
         current-status (get-current-status)]
-    (css/shop-banner
-      [:div.banner-content
-       [:img.shop-logo
-        {:src "img/barbershop.png"
-         :alt "LaBarberShop logo"}]
-       [:div.shop-info
-        [:div.shop-header
-         [:h1.shop-name (:name data/shop-info)]]
-        [:div.rating-line
-         [:span.rating-value (.toFixed (:average stats) 1)]
-         [:span.star icons/star-icon]
-         [:span.review-count (str "(" (:total stats) " reviews)")]]
-        [:div.hours-container
-         [:button.hours-button
-          {:on {:click [[:ui/toggle-details :working-hours]]}}
-          [:span icons/clock-icon]
-          (if (= (:status current-status) :open)
-            [:span {:class "open"} (:message current-status)]
-            [:span {:class "closed"} (:message current-status)])
-          [:span.chevron {:class (when hours-visible? "collapsed")}
-           icons/chevron-down-icon]]]]]
+    [:div
+     [:div.banner-content
+      [:img.shop-logo
+       {:src "img/barbershop.png"
+        :alt "LaBarberShop logo"}]
+      [:div.shop-info
+       [:div.shop-header
+        [:h1.shop-name (:name data/shop-info)]]
+       [:div.rating-line
+        [:span.rating-value (.toFixed (:average stats) 1)]
+        [:span.star icons/star-icon]
+        [:span.review-count (str "(" (:total stats) " reviews)")]]
+       [:div.hours-container
+        [:button.hours-button
+         {:on {:click [[:ui/toggle-details :working-hours]]}}
+         [:span icons/clock-icon]
+         (if (= (:status current-status) :open)
+           [:span {:class "open"} (:message current-status)]
+           [:span {:class "closed"} (:message current-status)])
+         [:span.chevron {:class (when hours-visible? "collapsed")}
+          icons/chevron-down-icon]]]]]
+     [:div
       (when hours-visible?
         [:div.hours-dropdown
          [:div.hours-title "Business Hours"]
@@ -211,4 +212,16 @@
              [:span
               (if (or (:closed? hours) (nil? (:open hours)))
                 [:span.closed "Closed"]
-                (str (t/format "h:mm a" (:open hours)) " - " (t/format "h:mm a" (:close hours))))]])]]))))
+                (str (t/format "h:mm a" (:open hours)) " - " (t/format "h:mm a" (:close hours))))]])]])]]))
+
+
+(defn top-shop-banner
+  [state reviews]
+  (css/top-shop-banner
+    (base-shop-banner state reviews)))
+
+(defn side-shop-banner
+  [state reviews]
+  (css/side-shop-banner
+    (base-shop-banner state reviews)))
+

@@ -71,10 +71,18 @@
 (o/defstyled main :main
   [:& {:display         "flex"
        :flex-direction  "column"
-       :justify-content "center"
+       :justify-content "flex-start"
        :align-items     "center"
        :width           "100%"
-       :padding         "1rem"}])
+       :padding         "1rem"}]
+
+  [:at-media {:min-width (:lg breakpoints)}
+   {:flex-direction  "row"
+    :align-items     "flex-start"
+    :justify-content "center"
+    :gap             "1.5rem"}])
+
+
 
 (o/defstyled container :div
   [:& {:background-color (:primary palette)
@@ -89,29 +97,14 @@
        :box-sizing       "border-box"}]
   [:section {:margin-bottom "1rem"}])
 
-(o/defstyled shop-banner :div
-  [:at-media {:min-width (:lg breakpoints)}
-   {:display "none"}]
-
-  {:padding       "1.5rem 1rem"
-   :border-bottom "1px solid #e5e7eb"
-   :margin-bottom "1rem"}
-
-  [:.banner-content {:display     "flex"
-                     :gap         "1rem"
-                     :align-items "flex-start"}]
-  [:.shop-logo {:width         "80px"
-                :height        "80px"
-                :border-radius "0.5rem"
-                :object-fit    "cover"
-                :flex-shrink   "0"}]
-  [:.shop-info {:flex           "1"
-                :display        "flex"
+(o/defstyled base-shop-banner :div
+  [:.shop-logo {:border-radius "0.5rem"
+                :object-fit    "cover"}]
+  [:.shop-info {:display        "flex"
                 :flex-direction "column"
                 :gap            "0.5rem"}]
-  [:.shop-header {:display         "flex"
-                  :justify-content "space-between"
-                  :align-items     "flex-start"}]
+  [:.shop-header {:display     "flex"
+                  :align-items "flex-start"}]
   [:.shop-name {:font-size   "1.25rem"
                 :font-weight "600"}]
   [:.rating-line {:display     "flex"
@@ -126,7 +119,6 @@
   [:.hours-button {:display       "flex"
                    :align-items   "center"
                    :gap           "0.25rem"
-                   :padding       "0.25rem 0.5rem"
                    :background    "transparent"
                    :border        "none"
                    :cursor        "pointer"
@@ -140,7 +132,6 @@
 
   [:.hours-dropdown {:margin-top       "1rem"
                      :padding          "1rem"
-                     :max-width        (:xs breakpoints)
                      :background-color (:grey-10 palette)
                      :border-radius    "0.5rem"}]
   [:.hours-title {:font-weight   "600"
@@ -155,6 +146,60 @@
   [:.chevron {:transition "transform 0.2s"
               :display    "inline-block"}]
   [:.chevron.collapsed {:transform "rotate(-180deg)"}])
+
+
+(o/defstyled top-shop-banner base-shop-banner
+  [:at-media {:min-width (:lg breakpoints)}
+   {:display "none"}]
+
+  {:padding       "1.5rem 1rem"
+   :border-bottom "1px solid #e5e7eb"
+   :margin-bottom "1rem"}
+
+  [:.banner-content {:display     "flex"
+                     :gap         "1rem"
+                     :align-items "flex-start"}]
+  [:.shop-logo {:width       "80px"
+                :height      "80px"
+                :flex-shrink "0"}]
+  [:.shop-info {:flex "1"}]
+  [:.shop-header {:justify-content "space-between"}]
+  [:.hours-button {:padding "0.25rem 0.5rem"}]
+  [:.hours-dropdown {:max-width (:xs breakpoints)}])
+
+
+(o/defstyled side-shop-banner base-shop-banner
+  [:at-media {:max-width (:lg breakpoints)}
+   {:display "none"}]
+
+  {:position         "sticky"
+   :top              "4rem"
+   :background-color (:primary palette)
+   :border-radius    "0.8rem"
+   :box-shadow       "0 4px 12px rgba(0,0,0,0.1)"
+   :padding          "1.5rem 1rem"
+   :width            "350px"
+   :align-self       "flex-start"}
+
+  [:.banner-content {:display        "flex"
+                     :flex-direction "column"
+                     :gap            "1rem"
+                     :align-items    "center"}]
+  [:.shop-logo {:width  "120px"
+                :height "120px"}]
+  [:.shop-info {:width "100%"}]
+  [:.shop-header {:justify-content "center"}]
+  [:.shop-name {:text-align "center"}]
+  [:.rating-line {:justify-content "center"}]
+  [:.hours-container {:flex-direction "column"
+                      :width          "100%"}]
+  [:.hours-button {:justify-content "center"
+                   :padding         "0.5rem 1rem"
+                   :width           "100%"}]
+  [:.hours-dropdown {:width "100%"}])
+
+
+
 
 ;; Base card component (reusable, can be inherited, generates a css class)
 (o/defstyled base-card :div

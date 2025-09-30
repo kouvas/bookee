@@ -60,7 +60,7 @@
       :replicant/on-unmount [[:ui/cleanup-scroll-observer]]})
    (css/main
      (css/container
-       (comp/shop-banner state data/reviews)
+       (comp/top-shop-banner state data/reviews)
        (services-view state)
        (team-view state)
        [:section#about
@@ -74,7 +74,8 @@
         (css/address-info
           icons/map-pin-line-icon
           [:p (:address data/shop-info)])
-        (m/leaflet-map state)]))
+        (m/leaflet-map state)])
+     (comp/side-shop-banner state data/reviews))
    (css/footer
      [:h2 "La footer"])])
 
