@@ -4,7 +4,8 @@
             [bookee.data :as data]
             [bookee.icons :as icons]
             [bookee.navigation :as nav]
-            [bookee.map :as m]))
+            [bookee.map :as m]
+            [taoensso.telemere :as t]))
 
 (defn services-view [state]
   (let [nav-state (nav/get-current-state (:nav-wmem state))]
@@ -37,7 +38,9 @@
          {:on {:click [[:navigate/back]]}}
          "← Back"))
      [:h2 "Calendar"]
-     [:p "Select a date and time for your appointment"]]))
+     [:p
+      {:on {:click [[:navigate/forward]]}}
+      "Select a date and time for your appointment"]]))
 
 (defn verification-view [state]
   (let [nav-state (nav/get-current-state (:nav-wmem state))]
@@ -50,7 +53,7 @@
      [:p "Please confirm your booking details"]]))
 
 (defn main-view [state]
-  [:<>
+  [:div
    (comp/navbar
      state
      {:replicant/on-mount   [[:ui/run-scroll-observer]]
@@ -75,17 +78,34 @@
    (css/footer
      [:h2 "La footer"])])
 
-(def views
-  {:main         main-view
-   :services     services-view
-   :team         team-view
-   :calendar     calendar-view
-   :verification verification-view})
-
-(defn main [state]
+(defn render-ui [state]
   (let [nav-state    (nav/get-current-state (:nav-wmem state))
         current-view (nav/get-view nav-state)]
-    (css/content
-      (if-let [view-fn (get views current-view)]
-        (view-fn state)
-        [:div "View not found: " (str current-view)]))))
+    (case current-view
+      :main
+      (main-view state)
+
+      :services
+      (services-view state)
+
+      :team
+      (team-view state)
+
+      :calendar
+      (calendar-view state)
+
+      :verification
+      (verification-view state)
+
+      (do
+        (t/log! :warn
+                {:msg  "Unknown view requested"
+                 :view current-view})
+
+        [:section
+         {:style {:padding "1rem"}}
+         (css/back-button
+           {:on {:click [[:navigate/back]]}}
+           "← Go back")
+         [:h2 "Page not found"]
+         [:p "The requested view could not be found."]]))))

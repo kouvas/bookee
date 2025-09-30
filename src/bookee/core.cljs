@@ -11,17 +11,13 @@
                        :selected-service nil
                        :selected-team    nil}))
 
-(defn render-ui
-  [new-state]
-  (ui/main new-state))
-
 (defn init! []
   (tel/set-min-level! :debug)
   (add-watch !store ::render
              (fn [_ _ _ new-state]
                (r/render
                  js/document.body
-                 (render-ui new-state))))
+                 (ui/render-ui new-state))))
   (r/set-dispatch!
     (fn [{:replicant/keys [dom-event trigger life-cycle]} event-data]
       (tel/spy! :debug [life-cycle trigger event-data])
