@@ -23,6 +23,9 @@
             :ui/toggle-details
             [(into [:effect/ui.toggle-details] (rest action))]
 
+            :ui/stop-propagation
+            [[:effect/stop-propagation event]]
+
             :ui/run-scroll-observer
             [[:effect/ui.run-scroll-observer]]
 
