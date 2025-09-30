@@ -2,6 +2,7 @@
   (:require [bookee.css :as css]
             [bookee.data :as data]))
 
+(defonce !map-instance (atom nil))
 
 (defn load-leaflet-css! []
   (when-not (.getElementById js/document "leaflet-css")
@@ -26,8 +27,9 @@
 (defn leaflet-map
   [_state]
   (css/map-container
-    {:id                 "map"
-     :replicant/on-mount [[:map/init-leaflet]]}))
+    {:id                   "map"
+     :replicant/on-mount   [[:map/init-leaflet]]
+     :replicant/on-unmount [[:map/cleanup-leaflet]]}))
 
 (defn init-leaflet!
   [store]
@@ -51,4 +53,10 @@
             (.addTo (.marker js/L #js [lat lng])
                     map-instance)
 
-            (swap! store assoc-in [:ui :map-instance] map-instance)))))))
+            (reset! !map-instance map-instance)))))))
+
+(defn destroy-leaflet!
+  [store]
+  (when-let [map-instance @!map-instance]
+    (.remove map-instance)
+    (reset! !map-instance nil)))
