@@ -66,52 +66,51 @@
     (let [service-id    (first args)
           current-wmem  (:nav-wmem @store)
           nav-state     (nav/get-current-state current-wmem)
-          selected-team (:selected-team @store)]
+          selected-team (get-in @store [:booking-details :selected-team-member])]
       (cond
         (and selected-team (= nav-state :->service))
         (let [new-wmem (nav/process-event current-wmem :select-service)]
           (swap! store assoc
-                 :selected-service service-id
-                 :nav-wmem new-wmem))
+                 :nav-wmem new-wmem)
+          (swap! store assoc-in [:booking-details :selected-service] service-id))
 
         (= nav-state :->team)
-        (swap! store assoc
+        (swap! store update :booking-details assoc
                :selected-service service-id
-               :selected-team nil)
+               :selected-team-member nil)
 
         :else
         (let [new-wmem (nav/process-event current-wmem :select-service)]
-          (swap! store assoc
-                 :selected-service service-id
-                 :nav-wmem new-wmem))))
+          (swap! store assoc :nav-wmem new-wmem)
+          (swap! store assoc-in [:booking-details :selected-service] service-id))))
 
     :effect/select-team
     (let [team-id          (first args)
           current-wmem     (:nav-wmem @store)
           nav-state        (nav/get-current-state current-wmem)
-          selected-service (:selected-service @store)]
+          selected-service (get-in @store [:booking-details :selected-service])]
       (cond
         (and selected-service (= nav-state :->team))
         (let [new-wmem (nav/process-event current-wmem :select-team)]
-          (swap! store assoc
-                 :selected-team team-id
-                 :nav-wmem new-wmem))
+          (swap! store assoc :nav-wmem new-wmem)
+          (swap! store assoc-in [:booking-details :selected-team-member] team-id))
 
         (= nav-state :->service)
-        (swap! store assoc
-               :selected-team team-id
+        (swap! store update :booking-details assoc
+               :selected-team-member team-id
                :selected-service nil)
 
         :else
         (let [new-wmem (nav/process-event current-wmem :select-team)]
-          (swap! store assoc
-                 :selected-team team-id
-                 :nav-wmem new-wmem))))
+          (swap! store assoc :nav-wmem new-wmem)
+          (swap! store assoc-in [:booking-details :selected-team-member] team-id))))
 
     :effect/navigate-forward
-    (let [{:keys [nav-wmem selected-service selected-team]} @store
-          nav-state    (nav/get-current-state nav-wmem)
-          can-proceed? (nav/can-go-forward? nav-state selected-service selected-team)]
+    (let [nav-wmem         (:nav-wmem @store)
+          selected-service (get-in @store [:booking-details :selected-service])
+          selected-team    (get-in @store [:booking-details :selected-team-member])
+          nav-state        (nav/get-current-state nav-wmem)
+          can-proceed?     (nav/can-go-forward? nav-state selected-service selected-team)]
       (when can-proceed?
         (let [new-wmem (nav/process-event nav-wmem :go-forward)]
           (swap! store assoc :nav-wmem new-wmem))))
@@ -126,12 +125,13 @@
           (if (= new-view :main)
             (swap! store assoc
                    :nav-wmem new-wmem
-                   :selected-service nil
-                   :selected-team nil)
+                   :booking-details {:selected-service     nil
+                                     :selected-team-member nil
+                                     :selected-date        nil})
             (swap! store assoc :nav-wmem new-wmem)))))
 
     :effect/calendar.select-date
-    (swap! store assoc-in [:calendar :selected-date] (first args))
+    (swap! store assoc-in [:booking-details :selected-date] (first args))
 
     :effect/calendar.prev-month
     (let [current-year  (get-in @store [:calendar :year])
@@ -141,17 +141,11 @@
           today-month   (inc (.getMonth today))]
       (if current-month
         (if (= current-month 1)
-          (swap! store assoc
-                 :calendar {:year  (dec current-year)
-                            :month 12})
+          (swap! store assoc :calendar {:year (dec current-year) :month 12})
           (swap! store assoc-in [:calendar :month] (dec current-month)))
         (if (= today-month 1)
-          (swap! store assoc
-                 :calendar {:year  (dec today-year)
-                            :month 12})
-          (swap! store assoc
-                 :calendar {:year  today-year
-                            :month (dec today-month)}))))
+          (swap! store assoc :calendar {:year (dec today-year) :month 12})
+          (swap! store assoc :calendar {:year today-year :month (dec today-month)}))))
 
     :effect/calendar.next-month
     (let [current-year  (get-in @store [:calendar :year])
@@ -161,16 +155,10 @@
           today-month   (inc (.getMonth today))]
       (if current-month
         (if (= current-month 12)
-          (swap! store assoc
-                 :calendar {:year  (inc current-year)
-                            :month 1})
+          (swap! store assoc :calendar {:year (inc current-year) :month 1})
           (swap! store assoc-in [:calendar :month] (inc current-month)))
         (if (= today-month 12)
-          (swap! store assoc
-                 :calendar {:year  (inc today-year)
-                            :month 1})
-          (swap! store assoc
-                 :calendar {:year  today-year
-                            :month (inc today-month)}))))
+          (swap! store assoc :calendar {:year (inc today-year) :month 1})
+          (swap! store assoc :calendar {:year today-year :month (inc today-month)}))))
 
     nil))

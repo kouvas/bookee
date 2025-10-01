@@ -1,5 +1,6 @@
 (ns bookee.calendar
-  (:require [tick.core :as t]
+  (:require [taoensso.telemere :as tel]
+            [tick.core :as t]
             [bookee.css :as css]
             [bookee.icons :as icons]
             [clojure.string :as str]))
@@ -26,28 +27,30 @@
          (partition 7)
          (map (fn [week]
                 (map (fn [date]
-                       (let [day-num           (t/day-of-month date)
-                             current-month     (t/month date)
-                             is-current-month  (= (t/int current-month) month)
-                             is-today          (= date today)
-                             is-past           (t/< date today)
-                             is-too-far-future (t/> date two-weeks-from-today)
-                             is-available      (and is-current-month
-                                                    (not is-past)
-                                                    (not is-too-far-future))
-                             classes           (cond-> []
-                                                       (not is-current-month) (conj "other-month")
-                                                       is-today (conj "today")
-                                                       is-past (conj "past")
-                                                       is-too-far-future (conj "too-far-future")
-                                                       is-available (conj "available"))]
+                       (let [day-num        (t/day-of-month date)
+                             current-month  (t/month date)
+                             current-month? (= (t/int current-month) month)
+                             today?         (= date today)
+                             past?          (t/< date today)
+                             sunday?        (= "SUNDAY" (t/format (t/day-of-week date)))
+                             unavailable?   (or sunday? (t/> date two-weeks-from-today))
+                             available?     (and current-month?
+                                                 (not past?)
+                                                 (not sunday?)
+                                                 (not unavailable?))
+                             classes        (cond-> []
+                                                    (not current-month?) (conj "other-month")
+                                                    today? (conj "today")
+                                                    past? (conj "past")
+                                                    unavailable? (conj "unavailable")
+                                                    available? (conj "available"))]
                          {:day            day-num
                           :date           date
-                          :current-month? is-current-month
-                          :today?         is-today
-                          :past?          is-past
-                          :unavailable    is-too-far-future
-                          :available?     is-available
+                          :current-month? current-month?
+                          :today?         today?
+                          :past?          past?
+                          :unavailable    unavailable?
+                          :available?     available?
                           :classes        classes}))
                      week))))))
 
@@ -62,26 +65,14 @@
         two-weeks-out (t/>> today (t/new-period 14 :days))
         max-year      (t/int (t/year two-weeks-out))
         max-month     (t/int (t/month two-weeks-out))
-        month-name    (case month
-                        1 "January"
-                        2 "February"
-                        3 "March"
-                        4 "April"
-                        5 "May"
-                        6 "June"
-                        7 "July"
-                        8 "August"
-                        9 "September"
-                        10 "October"
-                        11 "November"
-                        12 "December"
-                        "")
+        day-name      (str/capitalize (t/format (t/day-of-week t/today)))
+        month-name    (str/capitalize (t/format (t/month)))
         can-go-prev?  (or (> year today-year)
                           (and (= year today-year) (> month today-month)))
         can-go-next?  (or (< year max-year)
                           (and (= year max-year) (< month max-month)))]
     (css/calendar-header
-      [:div.month-year (str month-name " " year)]
+      [:div.month-year (str day-name ", " month-name " " (t/int (t/month (t/today))))]
       [:div.nav-buttons
        [:button.nav-button
         {:disabled (not can-go-prev?)
@@ -99,7 +90,7 @@
 
 
 (defn day-cell [{:keys [day classes date available?]} state]
-  (let [selected?   (= (str date) (get-in state [:calendar :selected-date]))
+  (let [selected?   (= (str date) (get-in state [:booking-details :selected-date]))
         all-classes (cond-> classes
                             selected? (conj "selected"))]
     (css/calendar-day-cell

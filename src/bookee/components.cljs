@@ -29,7 +29,7 @@
   [{:keys [id service-name duration price currency details] :as service} state]
   (let [details-visible? (get-in state [:ui :details-visibility? id] false)
         details-text     (if details-visible? "Hide details" "Details")
-        selected?        (= (:selected-service state) id)
+        selected?        (= (get-in state [:booking-details :selected-service]) id)
         nav-state        (nav/get-current-state (:nav-wmem state))
         current-view     (nav/get-view nav-state)]
     (css/service-card
@@ -51,7 +51,7 @@
   [{:keys [id name surname img details services-offered] :as user} state]
   (let [details-visible? (get-in state [:ui :details-visibility? id] false)
         details-text     (if details-visible? "Hide details" "Details")
-        selected?        (= (:selected-team state) id)
+        selected?        (= (get-in state [:booking-details :selected-team-member]) id)
         nav-state        (nav/get-current-state (:nav-wmem state))
         current-view     (nav/get-view nav-state)]
     (css/team-card

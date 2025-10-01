@@ -385,7 +385,7 @@
 
 (o/defstyled back-button :button
   {:padding          "0.75rem 1rem"
-   :background-color "#333"
+   :background-color "black"
    :color            "white"
    :border           "none"
    :border-radius    "0.5rem"
@@ -394,7 +394,7 @@
    :cursor           "pointer"
    :transition       "background-color 0.2s"
    :margin-bottom    "1rem"}
-  [:&:hover {:background-color "#555"}])
+  [:&:hover {:background-color (:grey-30 palette)}])
 
 (o/defstyled calendar-container :div
   {:max-width        "600px"
@@ -408,12 +408,10 @@
   {:display         "flex"
    :justify-content "space-between"
    :align-items     "center"
-   :margin-bottom   "1.5rem"}
-  [:.month-year {:font-size   "1.5rem"
-                 :font-weight "600"
-                 :color       "black"}]
+   :margin-bottom   "1rem"}
+  [:.month-year {:font-weight "600"}]
   [:.nav-buttons {:display "flex"
-                  :gap     "0.5rem"}]
+                  :gap     "0.25rem"}]
   [:.nav-button {:background-color "transparent"
                  :border           "none"
                  :color            "black"
@@ -461,10 +459,10 @@
             :opacity         "0.4"
             :cursor          "not-allowed"
             :text-decoration "line-through"}]
-  [:&.too-far-future {:color           (:grey-30 palette)
-                      :opacity         "0.4"
-                      :cursor          "not-allowed"
-                      :text-decoration "line-through"}]
+  [:&.unavailable {:color           (:grey-30 palette)
+                   :opacity         "0.4"
+                   :cursor          "not-allowed"
+                   :text-decoration "line-through"}]
   [:&.available {:cursor           "pointer"
                  :background-color (:grey-10 palette)
                  :color            "black"
@@ -473,11 +471,11 @@
                        :transform        "scale(1.05)"}]
   [:&.today {:border (str "2px solid black")}]
   [:&.selected {:background-color "black !important"
-                :color            "white"
+                :color            (:primary palette)
                 :font-weight      "700"}]
   [:&.selected:hover {:transform "scale(1.05)"}])
 
 (o/defstyled footer :footer
   {:background-color "black"
-   :color            "white"}
+   :color            (:primary palette)}
   [:h2 {:padding "5rem"}])

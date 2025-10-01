@@ -8,8 +8,9 @@
 
 (defonce !store (atom {:ui               {}
                        :nav-wmem         (nav/init-statechart)
-                       :selected-service nil
-                       :selected-team    nil}))
+                       :booking-details  {:selected-service     nil
+                                         :selected-team-member nil
+                                         :selected-date        nil}}))
 
 (defn init! []
   (tel/set-min-level! :debug)
