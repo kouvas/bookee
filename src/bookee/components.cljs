@@ -42,8 +42,9 @@
       [:span (str (get data/currencies currency) price)]
       (when details
         [:span " • "
-         [:a {:on {:click [[:ui/stop-propagation] [:ui/toggle-details id]]}}
-          (css/details-link details-text)]])
+         (css/details-link
+           {:on {:click [[:ui/stop-propagation] [:ui/toggle-details id]]}}
+           details-text)])
       (when (and details details-visible?)
         (css/details-body details)))))
 
@@ -63,8 +64,10 @@
       [:div.team-content
        [:div.team-name (str name " " surname)]
        (when details
-         [:a {:on {:click [[:ui/stop-propagation] [:ui/toggle-details id]]}}
-          [:div.team-role (css/details-link details-text)]])
+         [:div.team-role
+          (css/details-link
+            {:on {:click [[:ui/stop-propagation] [:ui/toggle-details id]]}}
+            details-text)])
        (when (and details
                   details-visible?
                   (seq services-offered))
