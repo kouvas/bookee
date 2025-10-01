@@ -26,7 +26,7 @@
    :grey-25       "#dadadaf0"
    :grey-30       "#6b7280"
 
-   :star          "#fbbf24"})
+   :star          "black"})
 
 (def global-styles
   [[:* {:margin     0
