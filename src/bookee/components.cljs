@@ -5,6 +5,7 @@
             [bookee.icons :as icons]
             [clojure.string :as str]
             ["@js-joda/timezone" :as joda-tz]          ; load tz data
+            [taoensso.telemere :as tel]
             [tick.core :as t]
             [tick.locale-en-us]))
 
@@ -141,15 +142,14 @@
   (let [now          (t/now)
         current-time (t/time now)
         day-of-week  (t/day-of-week now)
-        ;; Map Java day-of-week to our keyword format
-        day-map      {:MONDAY    :monday
-                      :TUESDAY   :tuesday
-                      :WEDNESDAY :wednesday
-                      :THURSDAY  :thursday
-                      :FRIDAY    :friday
-                      :SATURDAY  :saturday
-                      :SUNDAY    :sunday}
-        today-hours  (get data/working-hours (day-map day-of-week))
+        day-map      {"MONDAY"    :monday
+                      "TUESDAY"   :tuesday
+                      "WEDNESDAY" :wednesday
+                      "THURSDAY"  :thursday
+                      "FRIDAY"    :friday
+                      "SATURDAY"  :saturday
+                      "SUNDAY"    :sunday}
+        today-hours  (get data/working-hours (get day-map (t/format day-of-week)))
         open-time    (:open today-hours)
         close-time   (:close today-hours)]
     (cond
@@ -190,11 +190,12 @@
         [:span.review-count (str "(" (:total stats) " reviews)")]]
        [:div.hours-container
         [:button.hours-button
-         {:on {:click [[:ui/toggle-details :working-hours]]}}
+         (let [opts {:on {:click [[:ui/toggle-details :working-hours]]}}]
+           (if (= (:status current-status) :open)
+             (assoc opts :class "open")
+             (assoc opts :class "closed")))
          [:span icons/clock-icon]
-         (if (= (:status current-status) :open)
-           [:span {:class "open"} (:message current-status)]
-           [:span {:class "closed"} (:message current-status)])
+         [:span (:message current-status)]
          [:span.chevron {:class (when hours-visible? "collapsed")}
           icons/chevron-down-icon]]]]]
      [:div

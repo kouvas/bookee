@@ -188,7 +188,7 @@
    :border-radius    "0.8rem"
    :box-shadow       "0 4px 12px rgba(0,0,0,0.1)"
    :padding          "1.5rem 1rem"
-   :width            "350px"
+   :width            (:sm breakpoints)
    :align-self       "flex-start"}
 
   [:.banner-content {:display        "flex"
