@@ -106,10 +106,11 @@
                 {:msg  "Unknown view requested"
                  :view current-view})
 
-        [:section
-         {:style {:padding "1rem"}}
-         (css/back-button
-           {:on {:click [[:navigate/back]]}}
-           "← Go back")
-         [:h2 "Page not found"]
-         [:p "The requested view could not be found."]]))))
+        (css/view-container
+          [:section
+           {:style {:padding "1rem"}}
+           (css/back-button
+             {:on {:click [[:navigate/back]]}}
+             "← Go back")
+           [:h2 "Page not found"]
+           [:p "The requested view could not be found."]])))))
