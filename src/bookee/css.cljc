@@ -87,7 +87,7 @@
 (o/defstyled container :div
   [:& {:background-color (:primary palette)
        :width            "100%"
-       :max-width        "896px"
+       :max-width        (:md breakpoints)
        :min-height       "90vh"
        :box-shadow       "0 4px 12px rgba(0,0,0,0.1);"
        ; Remove margin since main has padding
