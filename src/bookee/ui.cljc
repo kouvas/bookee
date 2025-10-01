@@ -5,6 +5,7 @@
             [bookee.icons :as icons]
             [bookee.navigation :as nav]
             [bookee.map :as m]
+            [bookee.calendar :as cal]
             [taoensso.telemere :as t]))
 
 (defn services-view [state]
@@ -37,10 +38,8 @@
        (css/back-button
          {:on {:click [[:navigate/back]]}}
          "← Back"))
-     [:h2 "Calendar"]
-     [:p
-      {:on {:click [[:navigate/forward]]}}
-      "Select a date and time for your appointment"]]))
+     [:h2 "Select a Date"]
+     (cal/main state)]))
 
 (defn verification-view [state]
   (let [nav-state (nav/get-current-state (:nav-wmem state))]

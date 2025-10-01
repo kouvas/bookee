@@ -50,5 +50,14 @@
             :navigate/forward
             [[:effect/navigate-forward]]
 
+            :calendar/select-date
+            [[:effect/calendar.select-date (second action)]]
+
+            :calendar/prev-month
+            [[:effect/calendar.prev-month]]
+
+            :calendar/next-month
+            [[:effect/calendar.next-month]]
+
             (prn "Unknown action:" action))))
     actions))

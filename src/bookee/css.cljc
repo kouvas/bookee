@@ -18,6 +18,7 @@
    :danger-hover  "#ffe7e7"
    :warning       ""
    :info          "#0077cc"
+   :info-light    "#6eb5eeff"
    :info-hover    "#005897"
 
    ;; support colors
@@ -394,6 +395,87 @@
    :transition       "background-color 0.2s"
    :margin-bottom    "1rem"}
   [:&:hover {:background-color "#555"}])
+
+(o/defstyled calendar-container :div
+  {:max-width        "600px"
+   :margin           "2rem auto"
+   :padding          "1.5rem"
+   :background-color (:primary palette)
+   :border-radius    "0.8rem"
+   :box-shadow       "0 2px 8px rgba(0,0,0,0.1)"})
+
+(o/defstyled calendar-header :div
+  {:display         "flex"
+   :justify-content "space-between"
+   :align-items     "center"
+   :margin-bottom   "1.5rem"}
+  [:.month-year {:font-size   "1.5rem"
+                 :font-weight "600"
+                 :color       "black"}]
+  [:.nav-buttons {:display "flex"
+                  :gap     "0.5rem"}]
+  [:.nav-button {:background-color "transparent"
+                 :border           "none"
+                 :color            "black"
+                 :padding          "0.25rem"
+                 :cursor           "pointer"
+                 :transition       "opacity 0.2s"
+                 :display          "flex"
+                 :align-items      "center"
+                 :justify-content  "center"}]
+  [:.nav-button:hover {:opacity "0.6"}]
+  [:.nav-button:disabled {:opacity "0.3"
+                          :cursor  "not-allowed"}]
+  [:.nav-button:disabled:hover {:opacity "0.3"}])
+
+(o/defstyled calendar-days-header :div
+  {:display               "grid"
+   :grid-template-columns "repeat(7, 1fr)"
+   :gap                   "0.5rem"
+   :margin-bottom         "0.5rem"}
+  [:.day-initial {:text-align  "center"
+                  :font-weight "600"
+                  :font-size   "0.875rem"
+                  :color       (:text palette)
+                  :padding     "0.5rem"}])
+
+(o/defstyled calendar-grid :div
+  {:display               "grid"
+   :grid-template-columns "repeat(7, 1fr)"
+   :gap                   "0.5rem"})
+
+(o/defstyled calendar-day-cell :div
+  {:aspect-ratio    "1"
+   :display         "flex"
+   :align-items     "center"
+   :justify-content "center"
+   :border-radius   "0.5rem"
+   :font-size       "0.875rem"
+   :transition      "all 0.2s"
+   :position        "relative"}
+  [:&.other-month {:color           (:grey-30 palette)
+                   :opacity         "0.4"
+                   :cursor          "not-allowed"
+                   :text-decoration "line-through"}]
+  [:&.past {:color           (:grey-30 palette)
+            :opacity         "0.4"
+            :cursor          "not-allowed"
+            :text-decoration "line-through"}]
+  [:&.too-far-future {:color           (:grey-30 palette)
+                      :opacity         "0.4"
+                      :cursor          "not-allowed"
+                      :text-decoration "line-through"}]
+  [:&.available {:cursor           "pointer"
+                 :background-color (:grey-10 palette)
+                 :color            "black"
+                 :font-weight      "500"}]
+  [:&.available:hover {:background-color (:grey-20 palette)
+                       :transform        "scale(1.05)"}]
+  [:&.today {:border (str "2px solid black")}]
+  [:&.selected {:background-color "black !important"
+                :color            "white"
+                :font-weight      "700"}]
+  [:&.selected:hover {:transform "scale(1.05)"}])
 
 (o/defstyled footer :footer
   {:background-color "black"

@@ -130,4 +130,47 @@
                    :selected-team nil)
             (swap! store assoc :nav-wmem new-wmem)))))
 
+    :effect/calendar.select-date
+    (swap! store assoc-in [:calendar :selected-date] (first args))
+
+    :effect/calendar.prev-month
+    (let [current-year  (get-in @store [:calendar :year])
+          current-month (get-in @store [:calendar :month])
+          today         (js/Date.)
+          today-year    (.getFullYear today)
+          today-month   (inc (.getMonth today))]
+      (if current-month
+        (if (= current-month 1)
+          (swap! store assoc
+                 :calendar {:year  (dec current-year)
+                            :month 12})
+          (swap! store assoc-in [:calendar :month] (dec current-month)))
+        (if (= today-month 1)
+          (swap! store assoc
+                 :calendar {:year  (dec today-year)
+                            :month 12})
+          (swap! store assoc
+                 :calendar {:year  today-year
+                            :month (dec today-month)}))))
+
+    :effect/calendar.next-month
+    (let [current-year  (get-in @store [:calendar :year])
+          current-month (get-in @store [:calendar :month])
+          today         (js/Date.)
+          today-year    (.getFullYear today)
+          today-month   (inc (.getMonth today))]
+      (if current-month
+        (if (= current-month 12)
+          (swap! store assoc
+                 :calendar {:year  (inc current-year)
+                            :month 1})
+          (swap! store assoc-in [:calendar :month] (inc current-month)))
+        (if (= today-month 12)
+          (swap! store assoc
+                 :calendar {:year  (inc today-year)
+                            :month 1})
+          (swap! store assoc
+                 :calendar {:year  today-year
+                            :month (inc today-month)}))))
+
     nil))

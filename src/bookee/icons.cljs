@@ -25,3 +25,13 @@
   (icons/render
     (icons/icon :phosphor.regular/clock)
     {:size 16}))
+
+(def caret-left-icon
+  (icons/render
+    (icons/icon :phosphor.regular/caret-left)
+    {:size 20}))
+
+(def caret-right-icon
+  (icons/render
+    (icons/icon :phosphor.regular/caret-right)
+    {:size 20}))
