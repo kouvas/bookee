@@ -161,4 +161,12 @@
           (swap! store assoc :calendar {:year (inc today-year) :month 1})
           (swap! store assoc :calendar {:year today-year :month (inc today-month)}))))
 
+    :effect/calendar.select-time
+    (let [time         (first args)
+          current-wmem (:nav-wmem @store)
+          new-wmem     (nav/process-event current-wmem :go-forward)]
+      (swap! store #(-> %
+                        (assoc :nav-wmem new-wmem)
+                        (assoc-in [:booking-details :selected-time] time))))
+
     nil))

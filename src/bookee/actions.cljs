@@ -59,5 +59,8 @@
             :calendar/next-month
             [[:effect/calendar.next-month]]
 
+            :calendar/select-time
+            [[:effect/calendar.select-time]]
+
             (prn "Unknown action:" action))))
     actions))
