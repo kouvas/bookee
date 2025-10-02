@@ -1,6 +1,7 @@
 (ns bookee.calendar
   (:require [taoensso.telemere :as tel]
             [tick.core :as t]
+            [bookee.data :as data]
             [bookee.css :as css]
             [bookee.icons :as icons]
             [clojure.string :as str]))
@@ -109,10 +110,39 @@
         (day-cell day state)))))
 
 (defn calendar [state]
-  (css/calendar-container
+  (css/calendar-date
     (calendar-header state)
     (days-header)
     (calendar-grid state)))
 
+(defn time-slots
+  [state]
+  (let [selected-date  (get-in state [:booking-details :selected-date])
+        selected-time  (get-in state [:booking-details :selected-time])
+        date           (when selected-date (t/date selected-date)) ;; fixme pass t/date already?
+        day-of-week    (when date (str/capitalize (str (t/day-of-week date))))
+        day-number     (when date (str (t/day-of-month date)))
+        month-name     (when date (str/capitalize (t/format (t/month t/date))))
+        formatted-date (when date (str day-of-week ", " month-name " " day-number))
+        slots          (when date (data/time-slots date))]
+    (css/calendar-time-slots
+      [:div.date-label (or formatted-date "Select a time")]
+      (if (and date (seq slots))
+        [:div.slots
+         (for [{:keys [time available?]} slots]
+           (let [selected? (= time selected-time)]
+             (css/time-slot-button
+               {:key   time
+                :class (when selected? "selected")
+                :on    (when available?
+                         {:click [[:calendar/select-time]]})}
+               time)))]
+        [:div.no-slots
+         (if date
+           "No available slots"
+           "Please select a date")]))))
+
 (defn main [state]
-  (calendar state))
+  (css/calendar-date-time
+    (calendar state)
+    (time-slots state)))

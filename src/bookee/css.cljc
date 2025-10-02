@@ -396,9 +396,23 @@
    :margin-bottom    "1rem"}
   [:&:hover {:background-color (:grey-30 palette)}])
 
-(o/defstyled calendar-container :div
-  {:max-width        "600px"
-   :margin           "2rem auto"
+(o/defstyled calendar-date-time :div
+  {:display         "flex"
+   :flex-wrap       "wrap"
+   :gap             "2rem"
+   :justify-content "center"
+   :align-items     "flex-start"
+   :margin          "2rem auto"
+   :padding         "0 1rem"}
+  [:at-media {:max-width (:sm breakpoints)}
+   {:gap     "1rem"
+    :margin  "1rem auto"
+    :padding "0 0.5rem"}])
+
+(o/defstyled calendar-date :div
+  {:flex             "1 1 200px"
+   :max-width        "400px"
+   :width            "100%"
    :padding          "1.5rem"
    :background-color (:primary palette)
    :border-radius    "0.8rem"
@@ -474,6 +488,52 @@
                 :color            (:primary palette)
                 :font-weight      "700"}]
   [:&.selected:hover {:transform "scale(1.05)"}])
+
+(o/defstyled calendar-time-slots :div
+  {:flex             "1 1 200px"
+   :max-width        "400px"
+   :width            "100%"
+   :padding          "1.5rem"
+   :background-color (:primary palette)
+   :border-radius    "0.8rem"
+   :box-shadow       "0 2px 8px rgba(0,0,0,0.1)"}
+  [:.date-label {:font-weight   "600"
+                 :margin-bottom "1rem"}]
+  [:.slots {:display               "grid"
+            :grid-template-columns "repeat(2, 1fr)"
+            :gap                   "0.75rem"}]
+  [:.no-slots {:text-align "center"
+               :padding    "2rem"
+               :color      (:grey-50 palette)
+               :font-style "italic"}]
+  [:at-media {:max-width (:sm breakpoints)}
+   {:padding "0.5rem"}
+   [:.date-label {:font-size     "1.1rem"
+                  :margin-bottom "0.75rem"}]
+   [:.slots {:gap "0.5rem"}]
+   [:.no-slots {:padding "1rem"}]])
+
+(o/defstyled time-slot-button :button
+  {:padding          "0.5rem"
+   :border           (str "2px solid " (:grey-20 palette))
+   :border-radius    "0.5rem"
+   :background-color (:grey-10 palette)
+   :color            "black"
+   :font-weight      "500"
+   :cursor           "pointer"
+   :transition       "all 0.2s"
+   :text-align       "center"}
+  [:&:hover {:background-color (:grey-20 palette)
+             :transform        "scale(1.05)"}]
+  [:&.selected {:background-color "black"
+                :color            "white"
+                :border-color     "black"}]
+  [:&.selected:hover {:transform "scale(1.05)"}]
+  [:&:disabled {:opacity "0.4"
+                :cursor  "not-allowed"}]
+  [:&:disabled:hover {:transform "none"}]
+  [:at-media {:max-width (:sm breakpoints)}
+   {:font-size "0.875rem"}])
 
 (o/defstyled footer :footer
   {:background-color "black"

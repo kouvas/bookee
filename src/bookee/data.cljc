@@ -1,5 +1,6 @@
 (ns bookee.data
-  (:require [tick.core :as t]))
+  (:require [tick.core :as t]
+            [clojure.string :as str]))
 
 (def services
   [{:id           1
@@ -148,3 +149,26 @@
    :friday    {:open (t/time "09:00") :close (t/time "21:00") :closed? false}
    :saturday  {:open (t/time "09:00") :close (t/time "15:00") :closed? false}
    :sunday    {:closed? true}})
+
+(defn time-slots
+  [date]
+  (let [day-of-week (keyword (str/lower-case (str (t/day-of-week date))))
+        hours       (get working-hours day-of-week)
+        date-hash   (hash (str date))]
+    (if (or (nil? hours) (:closed? hours))
+      []
+      (let [open-time     (:open hours)
+            close-time    (:close hours)
+            total-minutes (t/minutes (t/between open-time close-time))
+            max-slots     (quot total-minutes 30)
+            num-slots     (+ 3 (mod date-hash (- max-slots 2)))
+            slot-interval (quot total-minutes num-slots)]
+        (loop [idx    0
+               result []]
+          (if (>= idx num-slots)
+            result
+            (let [minutes-offset (* idx slot-interval)
+                  slot-time      (t/>> open-time (t/new-duration minutes-offset :minutes))]
+              (recur (inc idx)
+                     (conj result {:time       (str slot-time)
+                                   :available? true})))))))))
