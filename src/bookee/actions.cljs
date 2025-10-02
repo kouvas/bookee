@@ -60,7 +60,22 @@
             [[:effect/calendar.next-month]]
 
             :calendar/select-time
-            [[:effect/calendar.select-time]]
+            [[:effect/calendar.select-time (second action)]]
+
+            :verification/update-name
+            [[:effect/verification.update-name (second action)]]
+
+            :verification/update-email
+            [[:effect/verification.update-email (second action)]]
+
+            :verification/confirm-booking
+            [[:effect/verification.confirm-booking]]
+
+            :verification/reset-booking
+            [[:effect/verification.reset-booking]]
+
+            :verification/close-modal
+            [[:effect/verification.close-modal]]
 
             (prn "Unknown action:" action))))
     actions))

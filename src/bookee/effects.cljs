@@ -169,4 +169,38 @@
                         (assoc :nav-wmem new-wmem)
                         (assoc-in [:booking-details :selected-time] time))))
 
+    :effect/verification.update-name
+    (swap! store assoc-in [:verification :customer-name] (first args))
+
+    :effect/verification.update-email
+    (swap! store assoc-in [:verification :customer-email] (first args))
+
+    :effect/verification.confirm-booking
+    (swap! store assoc-in [:ui :show-confirmation-modal?] true)
+
+    :effect/verification.reset-booking
+    (let [initial-wmem (nav/init-statechart)]
+      (swap! store assoc
+             :nav-wmem initial-wmem
+             :booking-details {:selected-service     nil
+                               :selected-team-member nil
+                               :selected-date        nil
+                               :selected-time        nil}
+             :verification {:customer-name  nil
+                            :customer-email nil}
+             :ui {:show-confirmation-modal? false}))
+
+    :effect/verification.close-modal
+    (let [initial-wmem (nav/init-statechart)]
+      (swap! store assoc
+             :nav-wmem initial-wmem
+             :booking-details {:selected-service     nil
+                               :selected-team-member nil
+                               :selected-date        nil
+                               :selected-time        nil}
+             :verification {:customer-name  nil
+                            :customer-email nil}
+             :ui {:show-confirmation-modal? false}))
+
     nil))
+

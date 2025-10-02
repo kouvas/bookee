@@ -34,9 +34,18 @@
         :padding    0
         :box-sizing "border-box"}]
    [:html {:scroll-behavior    "smooth"
-           :scroll-padding-top "3rem"}]                ;; Add padding for sticky navbar
+           :scroll-padding-top "3rem"}]
    [:body {:height           "100%"
-           :background-color (:grey-20 palette)}]])
+           :background-color (:grey-20 palette)}]
+   ["@keyframes fadeIn"
+    [:from {:opacity 0}]
+    [:to {:opacity 1}]]
+   ["@keyframes slideUp"
+    [:from {:transform "translateY(20px)"
+            :opacity   0}]
+    [:to {:transform "translateY(0)"
+          :opacity   1}]]])
+
 
 (o/defstyled content :div
   {})
@@ -534,6 +543,162 @@
   [:&:disabled:hover {:transform "none"}]
   [:at-media {:max-width (:sm breakpoints)}
    {:font-size "0.875rem"}])
+
+(o/defstyled verification-container :div
+  {:max-width "800px"
+   :margin    "0 auto"
+   :padding   "2rem"}
+  [:.verification-content
+   {:display        "flex"
+    :flex-direction "column"
+    :gap            "2rem"}])
+
+(o/defstyled booking-summary :div
+  {:background-color "white"
+   :border-radius    "0.75rem"
+   :padding          "1.5rem"
+   :box-shadow       "0 1px 3px rgba(0, 0, 0, 0.1)"}
+  [:.summary-title
+   {:font-size     "1.25rem"
+    :font-weight   "600"
+    :margin-bottom "1rem"
+    :color         "black"}]
+  [:.summary-item
+   {:display         "flex"
+    :justify-content "space-between"
+    :padding         "0.75rem 0"
+    :border-bottom   (str "1px solid " (:grey-80 palette))}
+   [:&:last-child {:border-bottom "none"}]]
+  [:.item-label
+   {:font-weight "500"
+    :color       "black"}]
+  [:.item-value
+   {:color       "black"
+    :font-weight "400"}]
+  [:.price-value
+   {:font-weight "600"
+    :font-size   "1.25rem"
+    :color       "black"}])
+
+
+(o/defstyled form-container :div
+  {:background-color "white"
+   :border-radius    "0.75rem"
+   :padding          "1.5rem"
+   :box-shadow       "0 1px 3px rgba(0, 0, 0, 0.1)"}
+  [:.form-title
+   {:font-size     "1.25rem"
+    :font-weight   "600"
+    :margin-bottom "1rem"
+    :color         "black"}]
+  [:.form-field
+   {:margin-bottom "1rem"}]
+  [:.field-label
+   {:display       "block"
+    :font-weight   "500"
+    :margin-bottom "0.5rem"
+    :color         "black"}]
+  [:.field-input
+   {:width         "100%"
+    :padding       "0.75rem"
+    :border        (str "1px solid " (:grey-70 palette))
+    :border-radius "0.5rem"
+    :font-size     "1rem"
+    :transition    "border-color 0.2s, box-shadow 0.2s"}
+   [:&:focus
+    {:outline      "none"
+     :border-color "black"
+     :box-shadow   "0 0 0 6px rgba(0, 0, 0, 0.1)"}]
+   [:&.invalid
+    {:border-color "#ef4444"}]]
+  [:.error-message
+   {:color      "#ef4444"
+    :font-size  "0.875rem"
+    :margin-top "0.25rem"}])
+
+
+(o/defstyled button-group :div
+  {:display    "flex"
+   :gap        "1rem"
+   :margin-top "1.5rem"}
+  [:.primary-button
+   {:flex             "1"
+    :padding          "0.75rem 1.5rem"
+    :background-color "black"
+    :color            "white"
+    :border           "none"
+    :border-radius    "0.5rem"
+    :font-size        "1rem"
+    :font-weight      "600"
+    :cursor           "pointer"
+    :transition       "background-color 0.2s"}
+   [:&:hover {:background-color (:grey-30 palette)}]
+   [:&:disabled
+    {:background-color (:grey-70 palette)
+     :cursor           "not-allowed"
+     :opacity          "0.6"}]]
+  [:.secondary-button
+   {:flex             "1"
+    :padding          "0.75rem 1.5rem"
+    :background-color "white"
+    :color            "black"
+    :border           "2px solid black"
+    :border-radius    "0.5rem"
+    :font-size        "1rem"
+    :font-weight      "600"
+    :cursor           "pointer"
+    :transition       "all 0.2s"}
+   [:&:hover
+    {:background-color "black"
+     :color            "white"}]])
+
+
+(o/defstyled modal-overlay :div
+  {:position         "fixed"
+   :top              "0"
+   :left             "0"
+   :right            "0"
+   :bottom           "0"
+   :background-color "rgba(0, 0, 0, 0.5)"
+   :display          "flex"
+   :align-items      "center"
+   :justify-content  "center"
+   :z-index          "1000"
+   :animation        "fadeIn 0.2s ease-in-out"}
+  [:.modal-content
+   {:background-color "white"
+    :border-radius    "1rem"
+    :padding          "2rem"
+    :max-width        "500px"
+    :margin           "1rem"
+    :box-shadow       "0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+    :animation        "slideUp 0.3s ease-out"}]
+  [:.modal-title
+   {:font-size     "1.5rem"
+    :font-weight   "700"
+    :margin-bottom "1rem"
+    :color         "black"
+    :text-align    "center"}]
+  [:.modal-message
+   {:font-size     "1.125rem"
+    :color         "black"
+    :text-align    "center"
+    :line-height   "1.6"
+    :margin-bottom "1.5rem"}]
+  [:.modal-button
+   {:width            "100%"
+    :padding          "0.75rem"
+    :background-color "black"
+    :color            "white"
+    :border           "none"
+    :border-radius    "0.5rem"
+    :font-size        "1rem"
+    :font-weight      "600"
+    :cursor           "pointer"
+    :transition       "background-color 0.2s"}
+   [:&:hover {:background-color (:grey-30 palette)}]])
+
+
 
 (o/defstyled footer :footer
   {:background-color "black"

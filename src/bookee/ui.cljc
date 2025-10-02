@@ -2,6 +2,7 @@
   (:require [bookee.css :as css]
             [bookee.components :as comp]
             [bookee.data :as data]
+            [bookee.utils :as utils]
             [bookee.icons :as icons]
             [bookee.navigation :as nav]
             [bookee.map :as m]
@@ -42,14 +43,48 @@
      (cal/main state)]))
 
 (defn verification-view [state]
-  (let [nav-state (nav/get-current-state (:nav-wmem state))]
-    [:section#verification
-     (when (nav/can-go-back? nav-state)
-       (css/back-button
-         {:on {:click [[:navigate/back]]}}
-         "← Back"))
-     [:h2 "Verification"]
-     [:p "Please confirm your booking details"]]))
+  (let [nav-state      (nav/get-current-state (:nav-wmem state))
+        customer-name  (get-in state [:verification :customer-name])
+        customer-email (get-in state [:verification :customer-email])
+        email-valid?   (utils/valid-email? customer-email)
+        form-valid?    (and (seq customer-name) email-valid?)]
+    (css/verification-container
+      (when (nav/can-go-back? nav-state)
+        (css/back-button
+          {:on {:click [[:navigate/back]]}}
+          "← Back"))
+      [:div.verification-content
+       (comp/booking-summary state)
+       (css/form-container
+         [:div.form-title "Your Information"]
+         [:div.form-field
+          [:label.field-label "Name"]
+          [:input.field-input
+           {:type        "text"
+            :placeholder "Jean Dupont"
+            :value       (or customer-name "")
+            :on          {:input [[:verification/update-name :event.target/value]]}}]]
+         [:div.form-field
+          [:label.field-label "Email"]
+          [:input.field-input
+           {:type        "email"
+            :class       (when (and (seq customer-email) (not email-valid?)) "invalid")
+            :placeholder "jean@example.com"
+            :value       (or customer-email "")
+            :on          {:input [[:verification/update-email :event.target/value]]}}]
+          (when (and (seq customer-email) (not email-valid?))
+            [:div.error-message "Please enter a valid email address"])]
+         (css/button-group
+           [:button.secondary-button
+            {:on {:click [[:verification/reset-booking]]}}
+            "Start Over"]
+           [:button.primary-button
+            {:disabled (not form-valid?)
+             :on       (when form-valid?
+                         {:click [[:verification/confirm-booking]]})}
+            "Confirm Booking"]))]
+      (comp/confirmation-modal state))))
+
 
 (defn main-view [state]
   [:div

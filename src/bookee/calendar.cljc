@@ -119,10 +119,10 @@
   [state]
   (let [selected-date  (get-in state [:booking-details :selected-date])
         selected-time  (get-in state [:booking-details :selected-time])
-        date           (when selected-date (t/date selected-date)) ;; fixme pass t/date already?
+        date           (when selected-date (t/date selected-date))
         day-of-week    (when date (str/capitalize (str (t/day-of-week date))))
         day-number     (when date (str (t/day-of-month date)))
-        month-name     (when date (str/capitalize (t/format (t/month t/date))))
+        month-name     (when date (str/capitalize (t/format (t/month date))))
         formatted-date (when date (str day-of-week ", " month-name " " day-number))
         slots          (when date (take (rand-int 8) (data/time-slots date)))]
     (css/calendar-time-slots
@@ -135,11 +135,11 @@
                {:key   time
                 :class (when selected? "selected")
                 :on    (when available?
-                         {:click [[:calendar/select-time]]})}
+                         {:click [[:calendar/select-time time]]})}
                time)))]
         [:div.no-slots
          (if date
-           "No available slots. Try another day"
+           "No available slots. Try another day."
            "Please select a date")]))))
 
 (defn main [state]

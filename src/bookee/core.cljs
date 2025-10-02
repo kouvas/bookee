@@ -22,11 +22,13 @@
   (r/set-dispatch!
     (fn [{:replicant/keys [dom-event trigger life-cycle]} event-data]
       (tel/spy! :debug [life-cycle trigger event-data])
-      (->> (actions/interpolate-actions dom-event event-data)
-           (actions/action->effect @!store dom-event)
-           (run! #(effects/effect-execute! !store %)))))
+      (let [interpolated-actions (actions/interpolate-actions dom-event event-data)
+            effects-list (actions/action->effect @!store dom-event interpolated-actions)]
+        (run! #(effects/effect-execute! !store %) effects-list))))
 
   (swap! !store assoc :initialised-at (.getTime (js/Date.))))
+
+
 
 (defn main []
   (init!)

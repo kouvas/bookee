@@ -229,3 +229,51 @@
   (css/side-shop-banner
     (base-shop-banner state reviews)))
 
+(defn booking-summary [state]
+  (let [service-id (get-in state [:booking-details :selected-service])
+        team-id    (get-in state [:booking-details :selected-team-member])
+        date-str   (get-in state [:booking-details :selected-date])
+        time-str   (get-in state [:booking-details :selected-time])
+        service    (first (filter #(= (:id %) service-id) data/services))
+        team       (first (filter #(= (:id %) team-id) data/users))
+        date       (when date-str (t/date date-str))
+        day-name   (when date (str/capitalize (str (t/day-of-week date))))
+        day-num    (when date (t/day-of-month date))
+        month-name (when date (str/capitalize (t/format (t/month date))))
+        formatted-date (when date (str day-name ", " month-name " " day-num))
+        full-name  (when team (str (:name team) " " (:surname team)))
+        currency-symbol (get data/currencies (:currency service))]
+    (css/booking-summary
+      [:div.summary-title "Booking Summary"]
+      [:div.summary-item
+       [:span.item-label "Service"]
+       [:span.item-value (:service-name service)]]
+      [:div.summary-item
+       [:span.item-label "Barber"]
+       [:span.item-value full-name]]
+      [:div.summary-item
+       [:span.item-label "Date"]
+       [:span.item-value formatted-date]]
+      [:div.summary-item
+       [:span.item-label "Time"]
+       [:span.item-value (or time-str "Not selected")]]
+      [:div.summary-item
+       [:span.item-label "Price"]
+       [:span.price-value (str currency-symbol (:price service))]])))
+
+
+(defn confirmation-modal [state]
+  (when (get-in state [:ui :show-confirmation-modal?])
+    (css/modal-overlay
+      {:on {:click [[:verification/close-modal]]}}
+      [:div.modal-content
+       {:on {:click [[:ui/stop-propagation]]}}
+       [:div.modal-title "Magnifique! 💈"]
+       [:div.modal-message
+        "Your booking is confirmed! We'll see you soon for a haircut so good, "
+        "even the Mona Lisa would smile with envy!"]
+       [:button.modal-button
+        {:on {:click [[:verification/close-modal]]}}
+        "Merci!"]])))
+
+
