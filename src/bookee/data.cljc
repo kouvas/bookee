@@ -153,22 +153,15 @@
 (defn time-slots
   [date]
   (let [day-of-week (keyword (str/lower-case (str (t/day-of-week date))))
-        hours       (get working-hours day-of-week)
-        date-hash   (hash (str date))]
+        hours       (get working-hours day-of-week)]
     (if (or (nil? hours) (:closed? hours))
       []
-      (let [open-time     (:open hours)
-            close-time    (:close hours)
-            total-minutes (t/minutes (t/between open-time close-time))
-            max-slots     (quot total-minutes 30)
-            num-slots     (+ 3 (mod date-hash (- max-slots 2)))
-            slot-interval (quot total-minutes num-slots)]
-        (loop [idx    0
-               result []]
-          (if (>= idx num-slots)
+      (let [open-time  (:open hours)
+            close-time (:close hours)]
+        (loop [current-time open-time
+               result       []]
+          (if (t/>= current-time close-time)
             result
-            (let [minutes-offset (* idx slot-interval)
-                  slot-time      (t/>> open-time (t/new-duration minutes-offset :minutes))]
-              (recur (inc idx)
-                     (conj result {:time       (str slot-time)
-                                   :available? true})))))))))
+            (recur (t/>> current-time (t/new-duration 30 :minutes))
+                   (conj result {:time       (str current-time)
+                                 :available? true}))))))))

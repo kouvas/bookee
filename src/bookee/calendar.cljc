@@ -124,7 +124,7 @@
         day-number     (when date (str (t/day-of-month date)))
         month-name     (when date (str/capitalize (t/format (t/month t/date))))
         formatted-date (when date (str day-of-week ", " month-name " " day-number))
-        slots          (when date (data/time-slots date))]
+        slots          (when date (take (rand-int 8) (data/time-slots date)))]
     (css/calendar-time-slots
       [:div.date-label (or formatted-date "Select a time")]
       (if (and date (seq slots))
@@ -139,7 +139,7 @@
                time)))]
         [:div.no-slots
          (if date
-           "No available slots"
+           "No available slots. Try another day"
            "Please select a date")]))))
 
 (defn main [state]
