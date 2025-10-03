@@ -220,6 +220,9 @@
 
 
 
+(def arrow [:.arrow {:color       (:info palette)
+                     :flex-shrink "0"
+                     :transition  "transform 0.2s ease"}])
 
 ;; Base card component (reusable, can be inherited, generates a css class)
 (o/defstyled base-card :div
@@ -231,12 +234,15 @@
    :transition       "all 0.3s ease"
    :cursor           "pointer"}
   [:&:hover {:transform  "translateY(-2px)"
-             :box-shadow "0 4px 16px rgba(0,0,0,0.15)"}])
+             :box-shadow "0 4px 16px rgba(0,0,0,0.15)"}]
+  arrow)
 
 (o/defstyled service-card base-card
   ;; Extends base-card, only add/override specific styles
-  {:padding "1.5rem"
-   :margin  "1rem"}
+  {:padding "1.5rem"}
+  [:.service-info {:display         "flex"
+                   :justify-content "space-between"
+                   :align-items     "center"}]
   [:.service-name {}]
   [:.service-details {}]
   [:.price {}]
@@ -273,10 +279,6 @@
                       :border-radius    "0.375rem"
                       :font-weight      "500"
                       :font-size        "0.75rem"}]
-
-  [:.team-arrow {:color       (:info palette)
-                 :flex-shrink "0"
-                 :transition  "transform 0.2s ease"}]
 
   [:&:hover [:.team-arrow {:transform "translateX(4px)"
                            :color     (:info-hover palette)}]])

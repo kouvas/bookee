@@ -38,13 +38,16 @@
        :on    (when (#{:main :services} current-view)
                 {:click [[:select-service id]]})}
       [:h3 service-name]
-      [:span (str duration " min") " mins • "]
-      [:span (str (get data/currencies currency) price)]
-      (when details
-        [:span " • "
-         (css/details-link
-           {:on {:click [[:ui/stop-propagation] [:ui/toggle-details id]]}}
-           details-text)])
+      [:div.service-info
+       [:div
+        [:span (str duration " min") " mins • "]
+        [:span (str (get data/currencies currency) price)]
+        (when details
+          [:span " • "
+           (css/details-link
+             {:on {:click [[:ui/stop-propagation] [:ui/toggle-details id]]}}
+             details-text)])]
+       [:span.arrow ">"]]
       (when (and details details-visible?)
         (css/details-body details)))))
 
@@ -78,7 +81,7 @@
                   :let [service (first (filter #(= (:id %) service-id) data/services))]]
               [:span.specialty-badge {:key service-id}
                (:service-name service)])]))]
-      [:div.team-arrow ">"])))
+      [:span.arrow ">"])))
 
 (defn about
   [desc]
@@ -230,18 +233,18 @@
     (base-shop-banner state reviews)))
 
 (defn booking-summary [state]
-  (let [service-id (get-in state [:booking-details :selected-service])
-        team-id    (get-in state [:booking-details :selected-team-member])
-        date-str   (get-in state [:booking-details :selected-date])
-        time-str   (get-in state [:booking-details :selected-time])
-        service    (first (filter #(= (:id %) service-id) data/services))
-        team       (first (filter #(= (:id %) team-id) data/users))
-        date       (when date-str (t/date date-str))
-        day-name   (when date (str/capitalize (str (t/day-of-week date))))
-        day-num    (when date (t/day-of-month date))
-        month-name (when date (str/capitalize (t/format (t/month date))))
-        formatted-date (when date (str day-name ", " month-name " " day-num))
-        full-name  (when team (str (:name team) " " (:surname team)))
+  (let [service-id      (get-in state [:booking-details :selected-service])
+        team-id         (get-in state [:booking-details :selected-team-member])
+        date-str        (get-in state [:booking-details :selected-date])
+        time-str        (get-in state [:booking-details :selected-time])
+        service         (first (filter #(= (:id %) service-id) data/services))
+        team            (first (filter #(= (:id %) team-id) data/users))
+        date            (when date-str (t/date date-str))
+        day-name        (when date (str/capitalize (str (t/day-of-week date))))
+        day-num         (when date (t/day-of-month date))
+        month-name      (when date (str/capitalize (t/format (t/month date))))
+        formatted-date  (when date (str day-name ", " month-name " " day-num))
+        full-name       (when team (str (:name team) " " (:surname team)))
         currency-symbol (get data/currencies (:currency service))]
     (css/booking-summary
       [:div.summary-title "Booking Summary"]
