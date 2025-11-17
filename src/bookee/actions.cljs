@@ -1,5 +1,6 @@
 (ns bookee.actions
-  (:require [clojure.walk :as walk]))
+  (:require [clojure.walk :as walk]
+            [taoensso.telemere :as tel]))
 
 (defn interpolate-actions
   [dom-event event-data]
@@ -77,5 +78,9 @@
             :verification/close-modal
             [[:effect/verification.close-modal]]
 
-            (prn "Unknown action:" action))))
+            (do
+              (tel/log! :warn
+                        {:msg    "Unknown action encountered"
+                         :action action})
+              []))))
     actions))

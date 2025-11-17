@@ -1,0 +1,50 @@
+(ns bookee.utils-test
+  (:require [clojure.test :refer [deftest is testing]]
+            [bookee.utils :as utils]))
+
+(deftest valid-email?-test
+  (testing "Valid email addresses"
+    (is (utils/valid-email? "user@example.com")
+        "Simple valid email")
+    (is (utils/valid-email? "user.name@example.com")
+        "Email with dot in local part")
+    (is (utils/valid-email? "user+tag@example.com")
+        "Email with plus sign")
+    (is (utils/valid-email? "user_name@example.com")
+        "Email with underscore")
+    (is (utils/valid-email? "user123@example.co.uk")
+        "Email with numbers and multi-part TLD")
+    (is (utils/valid-email? "UPPERCASE@EXAMPLE.COM")
+        "Uppercase email")
+    (is (utils/valid-email? "user@subdomain.example.com")
+        "Email with subdomain")
+    (is (utils/valid-email? "123@example.com")
+        "Email starting with numbers"))
+
+  (testing "Invalid email addresses"
+    (is (nil? (utils/valid-email? "notanemail"))
+        "Missing @ symbol")
+    (is (nil? (utils/valid-email? "@example.com"))
+        "Missing local part")
+    (is (nil? (utils/valid-email? "user@"))
+        "Missing domain")
+    (is (nil? (utils/valid-email? "user@domain"))
+        "Missing TLD")
+    (is (nil? (utils/valid-email? "user @example.com"))
+        "Space in local part")
+    (is (nil? (utils/valid-email? "user@exam ple.com"))
+        "Space in domain")
+    (is (nil? (utils/valid-email? "user@@example.com"))
+        "Double @ symbol")
+    (is (nil? (utils/valid-email? "user@example..com"))
+        "Double dot in domain")
+    (is (nil? (utils/valid-email? "user@example.c"))
+        "TLD too short (less than 2 chars)")
+    (is (nil? (utils/valid-email? ""))
+        "Empty string"))
+
+  (testing "Nil and edge cases"
+    (is (nil? (utils/valid-email? nil))
+        "Nil input returns nil")
+    (is (nil? (utils/valid-email? "   "))
+        "Whitespace only")))
