@@ -4,15 +4,15 @@
             [bookee.data :as data]
             [bookee.utils :as utils]
             [bookee.icons :as icons]
-            [bookee.navigation :as nav]
+            [bookee.logic :as logic]
             [bookee.map :as m]
             [bookee.calendar :as cal]
             [taoensso.telemere :as t]))
 
 (defn services-view [state]
-  (let [nav-state (nav/get-current-state (:nav-wmem state))]
+  (let [navigation (:navigation state)]
     [:section#services
-     (when (nav/can-go-back? nav-state)
+     (when (logic/can-go-back? navigation)
        (css/back-button
          {:on {:click [[:navigate/back]]}}
          "← Back"))
@@ -21,9 +21,9 @@
        (comp/service-card service state))]))
 
 (defn team-view [state]
-  (let [nav-state (nav/get-current-state (:nav-wmem state))]
+  (let [navigation (:navigation state)]
     [:section#team
-     (when (nav/can-go-back? nav-state)
+     (when (logic/can-go-back? navigation)
        (css/back-button
          {:on {:click [[:navigate/back]]}}
          "← Back"))
@@ -33,9 +33,9 @@
        (comp/team-card team-member state))]))
 
 (defn calendar-view [state]
-  (let [nav-state (nav/get-current-state (:nav-wmem state))]
+  (let [navigation (:navigation state)]
     [:section#calendar
-     (when (nav/can-go-back? nav-state)
+     (when (logic/can-go-back? navigation)
        (css/back-button
          {:on {:click [[:navigate/back]]}}
          "← Back"))
@@ -43,13 +43,13 @@
      (cal/main state)]))
 
 (defn verification-view [state]
-  (let [nav-state      (nav/get-current-state (:nav-wmem state))
+  (let [navigation     (:navigation state)
         customer-name  (get-in state [:verification :customer-name])
         customer-email (get-in state [:verification :customer-email])
         email-valid?   (utils/valid-email? customer-email)
         form-valid?    (and (seq customer-name) email-valid?)]
     (css/verification-container
-      (when (nav/can-go-back? nav-state)
+      (when (logic/can-go-back? navigation)
         (css/back-button
           {:on {:click [[:navigate/back]]}}
           "← Back"))
@@ -114,8 +114,7 @@
      [:h2 "La footer"])])
 
 (defn render-ui [state]
-  (let [nav-state    (nav/get-current-state (:nav-wmem state))
-        current-view (nav/get-view nav-state)]
+  (let [current-view (get-in state [:navigation :current-view])]
     (case current-view
       :main
       (main-view state)

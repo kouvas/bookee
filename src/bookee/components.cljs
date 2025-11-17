@@ -1,6 +1,5 @@
 (ns bookee.components
   (:require [bookee.css :as css]
-            [bookee.navigation :as nav]
             [bookee.data :as data]
             [bookee.icons :as icons]
             [clojure.string :as str]
@@ -30,8 +29,7 @@
   (let [details-visible? (get-in state [:ui :details-visibility? id] false)
         details-text     (if details-visible? "Hide details" "Details")
         selected?        (= (get-in state [:booking-details :selected-service]) id)
-        nav-state        (nav/get-current-state (:nav-wmem state))
-        current-view     (nav/get-view nav-state)]
+        current-view     (get-in state [:navigation :current-view])]
     (css/service-card
       {:id    (str "service_" id)
        :class (when selected? "selected")
@@ -56,8 +54,7 @@
   (let [details-visible? (get-in state [:ui :details-visibility? id] false)
         details-text     (if details-visible? "Hide details" "Details")
         selected?        (= (get-in state [:booking-details :selected-team-member]) id)
-        nav-state        (nav/get-current-state (:nav-wmem state))
-        current-view     (nav/get-view nav-state)]
+        current-view     (get-in state [:navigation :current-view])]
     (css/team-card
       {:id    (str "team_member_" id)
        :class (when selected? "selected")

@@ -1,16 +1,15 @@
 (ns bookee.core
   (:require [bookee.ui :as ui]
-            [bookee.navigation :as nav]
-            [bookee.actions :as actions]
-            [bookee.effects :as effects]
+            [bookee.logic :as logic]
+            [bookee.events :as events]
             [replicant.dom :as r]
             [taoensso.telemere :as tel]))
 
 (defonce !store (atom {:ui               {}
-                       :nav-wmem         (nav/init-statechart)
+                       :navigation       logic/initial-navigation
                        :booking-details  {:selected-service     nil
-                                         :selected-team-member nil
-                                         :selected-date        nil}}))
+                                          :selected-team-member nil
+                                          :selected-date        nil}}))
 
 (defn init! []
   (tel/set-min-level! :debug)
@@ -20,11 +19,8 @@
                  js/document.body
                  (ui/render-ui new-state))))
   (r/set-dispatch!
-    (fn [{:replicant/keys [dom-event trigger life-cycle]} event-data]
-      (tel/spy! :debug [life-cycle trigger event-data])
-      (let [interpolated-actions (actions/interpolate-actions dom-event event-data)
-            effects-list (actions/action->effect @!store dom-event interpolated-actions)]
-        (run! #(effects/effect-execute! !store %) effects-list))))
+    (fn [replicant-event event-data]
+      (events/dispatch-event! !store replicant-event event-data)))
 
   (swap! !store assoc :initialised-at (.getTime (js/Date.))))
 
